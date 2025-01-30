@@ -4,19 +4,20 @@ const bcrypt = require("bcryptjs");
 const saltRounds = parseInt(process.env.SALT);
 
 const register = async (req, res) => {
-  const { firstName, lastName, age, country, email, password } =
+  const { firstName, lastName, username, email, password,image,phone} =
     req.body;
 const role_id=''// edit the value of role_id depend on role id in role table .
   const encryptedPassword = await bcrypt.hash(password, saltRounds);
-  const query = `INSERT INTO users (firstName, lastName, age, country, email, password, role_id) VALUES ($1,$2,$3,$4,$5,$6,$7)`;
+  const query = `INSERT INTO users (firstName, lastName, username, email, password, role, image,phone) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`;
   const data = [
     firstName,
     lastName,
-    age,
-    country,
+    username,
     email.toLowerCase(),
     encryptedPassword,
-    role_id
+    "user",
+    image,
+    phone,
   ];
   pool
     .query(query, data)
