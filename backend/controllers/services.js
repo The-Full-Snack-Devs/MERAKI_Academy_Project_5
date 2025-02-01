@@ -42,9 +42,31 @@ pool.query(query,[id])
 const addToCart=(req,res)=>{
     const userId=req.token.userId
     const servecies=req.servecies.params 
-    const query =`insert into Cart (userId,serveices) `
+    const query =`insert into Cart (userId,serveices) VALUES($1,$2) RETURNING * `
+    pool.query(query,[userId,servecies])
+    .then((result)=>{
+        res.status(201).json({
+            success: true,
+            message: "add to cart successfully",
+            result: result.rows,
+          });
+
+    })
+    
+    .catch((error)=>{
+        res.status(500).json({
+            success: false,
+            message: "Server error",
+          });
+    })
+}
+
+const getCartById=(req,res)=>{
+    const userId=req.token.userId
+    const query =` select name,title   `
 }
 module.exports = {
   getAllServices,
-  getServicesById
+  getServicesById,
+  addToCart
 };
