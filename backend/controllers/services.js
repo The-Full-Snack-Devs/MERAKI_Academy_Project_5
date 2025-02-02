@@ -1,5 +1,4 @@
-const { query } = require("express");
-const { pool } = require("../models/db");
+const pool  = require("../models/db");
 const getAllServices = (req, res) => {
   const query = `select * from servecies RETURNING * `;
   pool
@@ -40,15 +39,34 @@ pool.query(query,[id])
 })
 };
 
-const addToCart=(req,res)=>{
-    const userId=req.token.userId
-    const servecies=req.params.servecies
-    const query =`insert into Cart (userId,serveices) VALUES($1,$2) RETURNING * `
-    pool.query(query,[userId,servecies])
+const createNewCart=(req,res)=>{
+  const userId = req.token.userId;
+  pool
+    .query(`INSERT INTO cart (user_id) VALUES ($1) RETURNING *`, [userId])
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        message: "Cart created successfully",
+        result: result.rows,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+    });
+}
+
+const addToCart = (req,res)=>{
+    const { cart_id, parts_id } = req.body
+    const query =`insert into cart_parts (cart_id,parts_id) VALUES($1,$2) RETURNING * `
+    pool.query(query,[cart_id, parts_id])
     .then((result)=>{
         res.status(201).json({
             success: true,
-            message: "add to cart successfully",
+            message: "added to cart successfully",
             result: result.rows,
           });
 
@@ -62,11 +80,36 @@ const addToCart=(req,res)=>{
     })
 }
 
+const addPartsToCart = (req, res) => {
+  const { cart_id, parts_id } = req.body;
+  const query = `INSERT INTO cart_parts (cart_id, parts_id) VALUES ($1,$2) RETURNING *`;
+  const data = [cart_id, parts_id];
+
+  pool
+    .query(query, data)
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        message: `Part added to cart successfully`,
+        result: result.rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server error`,
+        err: err,
+      });
+    });
+};
+
 const getCartById=(req,res)=>{
     const userId=req.token.userId
-    const query =` select name,title,price from cart
-     inner join servecies on cart.serveices=servecies.id
-    inner join  parts on servecies.id= parts.service_id where cart.userId=$1 `
+    const query =`SELECT * FROM cart_parts 
+INNER JOIN cart ON cart_parts.cart_id = cart.id 
+INNER JOIN parts ON cart_parts.parts_id = parts.id 
+INNER JOIN servecies ON parts.service_id = servecies.id
+WHERE cart.user_id = $1 `
     pool.query(query,[userId])
     .then((result)=>{
         res.status(200).json({
@@ -83,6 +126,7 @@ const getCartById=(req,res)=>{
           });
     })
 }
+
 const createNewServices=(req,res)=>{
   const {Name,Des,img}=req.body
   const query=`insert  into orders (Name,Des,img) VALUES ($1,$2,$3) RETURNING * `
@@ -102,6 +146,8 @@ const createNewServices=(req,res)=>{
     });
   })
 }
+
+
 const deleteServicesById=(req,res)=>{
   const {id}=req.params
   const query=`UPDATE servecies
@@ -149,8 +195,10 @@ pool
 module.exports = {
   getAllServices,
   getServicesById,
+  createNewCart,
   addToCart,
   getCartById,
+  addPartsToCart,
   createNewServices,
   deleteServicesById,
   updateServicesById
