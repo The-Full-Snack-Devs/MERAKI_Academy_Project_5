@@ -14,7 +14,7 @@ app.use(cors());
 
 // router middleware
 app.use("/users", usersRouter);
-app.use("/services")
+app.use("/services",serveciesRouter)
 
 const PORT = 5000;
 
