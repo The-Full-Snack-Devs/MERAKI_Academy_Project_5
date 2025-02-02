@@ -1,5 +1,4 @@
 const express = require("express");
-
 const {
   getAllServices,
   getServicesById,
@@ -15,14 +14,16 @@ const authentication = require("../middlewares/authentication");
 const authorization = require("../middlewares/authorization");
 
 const serveciesRouter = express.Router();
-serveciesRouter.post("/", createNewServices);
-serveciesRouter.delete("/:id", deleteServicesById);
-serveciesRouter.put("/:id", updateServicesById);
-serveciesRouter.get("/all", getAllServices);
-serveciesRouter.get("/:id", getServicesById);
+
+serveciesRouter.post("/",  authentication,createNewServices);
+serveciesRouter.delete("/:id", authentication, deleteServicesById);
+serveciesRouter.put("/:id", authentication, updateServicesById);
+serveciesRouter.get("/all", authentication, getAllServices);
+serveciesRouter.get("/:id", authentication, getServicesById);
 serveciesRouter.post("/createCart", authentication, createNewCart);
-serveciesRouter.post("/addPartsToCart", addPartsToCart);
-serveciesRouter.post("/addCart", addToCart);
-serveciesRouter.get("/cart", addToCart);
+serveciesRouter.post("/addPartsToCart", authentication, addPartsToCart);
+serveciesRouter.post("/addCart", authentication, addToCart);
+serveciesRouter.get("/cart", authentication, addToCart);
+
 
 module.exports = serveciesRouter;

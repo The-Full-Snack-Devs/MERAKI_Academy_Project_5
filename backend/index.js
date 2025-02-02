@@ -4,6 +4,8 @@ const cors = require("cors");
 require("./models/db");
 
 //routers
+const partsRoutes = require("./routes/part");
+const orderRoutes = require("./routes/order");
 const usersRouter = require("./routes/users");
 const serveciesRouter=require("./routes/services")
 const app = express();
@@ -13,6 +15,8 @@ app.use(express.json());
 app.use(cors());
 
 // router middleware
+app.use("/part", partsRoutes);
+app.use("/orders", orderRoutes);
 app.use("/users", usersRouter);
 app.use("/services",serveciesRouter)
 
