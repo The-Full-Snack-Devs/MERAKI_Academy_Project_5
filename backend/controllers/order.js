@@ -1,10 +1,10 @@
 const pool = require("../models/db");
 
 const createNewOrder = (req, res) => {
-  const { title, description } = req.body;
-  const author_id = req.token.userId;
-  const query = `INSERT INTO orders (, , ) VALUES () RETURNING *;`;
-  const data = [title, description, author_id];
+  const userId = req.token.userId
+  const {cart} = req.body
+  const query = `INSERT INTO orders (user, cart) VALUES ($1, $2) RETURNING *;`;
+  const data = [userId, cart];
   pool
     .query(query, data)
     .then((result) => {
@@ -24,7 +24,7 @@ const createNewOrder = (req, res) => {
 };
 
 const getAllOrders = (req, res) => {
-  const query = `SELECT * FROM orders a WHERE a.is_deleted=0;`;
+  const query = `SELECT * FROM orders WHERE orders.is_deleted=0;`;
 
   pool
     .query(query)
@@ -45,8 +45,8 @@ const getAllOrders = (req, res) => {
 };
 
 const getOrderById = (req, res) => {
-  const id = req.params.id;
-  const query = `SELECT title,description,firstName,author_id FROM users INNER JOIN articles ON users.id=articles.author_id WHERE articles.id=$1 AND articles.is_deleted=0;`;
+  const id = req.params.id
+  const query = `SELECT * FROM orders WHERE orders.is_deleted=0 AND orders.id = ($1)`;
   const data = [id];
 
   pool
@@ -73,28 +73,26 @@ const getOrderById = (req, res) => {
 
 const updateOrderById = (req, res) => {
   const id = req.params.id;
-  let { title, description } = req.body;
-
-  const query = `UPDATE articles SET title = COALESCE($1,title), description = COALESCE($2, description) WHERE id=$3 AND is_deleted = 0  RETURNING *;`;
-  const data = [title || null, description || null, id];
+  const { Status, Team } = req.body;
+  const query = `UPDATE orders
+SET 
+    Status = COALESCE($1, Status), 
+    Team = COALESCE($2, Team)
+WHERE id = $3 
+RETURNING *;`;
   pool
-    .query(query, data)
+    .query(query, [Status||null, Team||null, id])
     .then((result) => {
-      if (result.rows.length !== 0) {
-        res.status(200).json({
-          success: true,
-          message: `Order with id: ${id} updated successfully `,
-          result: result.rows[0],
-        });
-      } else {
-        throw new Error("Error happened while updating Order");
-      }
+      res.status(200).json({
+        success: true,
+        message: `Orders with id: ${id} updated successfully `,
+        Servecies:result.rows,
+      });
     })
-    .catch((err) => {
+    .catch((error) => {
       res.status(500).json({
         success: false,
         message: "Server error",
-        err: err,
       });
     });
 };
@@ -102,7 +100,7 @@ const updateOrderById = (req, res) => {
 
 const deleteOrderById = (req, res) => {
   const id = req.params.id;
-  const query = `UPDATE  SET is_deleted=1 WHERE id=$1;`;
+  const query = `UPDATE orders SET is_deleted=1 WHERE id=$1;`;
   const data = [id];
   pool
     .query(query, data)
