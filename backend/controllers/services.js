@@ -1,6 +1,6 @@
 const { pool } = require("../models/db");
 const getAllServices = (req, res) => {
-  const query = `select * from servecies `;
+  const query = `select * from servecies where is_deleted=0 `;
   pool
     .query(query)
     .then((result) => {
@@ -131,10 +131,13 @@ const updateServicesById = (req, res) => {
   const id = req.params.id;
   const { name, description } = req.body;
   const query = `UPDATE servecies
-SET name = $1, description = $2 
-WHERE servecies.id=$3 RETURNING *`;
+SET 
+    name = COALESCE($1, name), 
+    description = COALESCE($2, description)
+WHERE id = $3 
+RETURNING *;`;
   pool
-    .query(query, [name, description, id])
+    .query(query, [name||null, description||null, id])
     .then((result) => {
       res.status(200).json({
         success: true,
