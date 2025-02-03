@@ -1,6 +1,6 @@
 const pool  = require("../models/db");
 const getAllServices = (req, res) => {
-  const query = `select * from servecies RETURNING * `;
+  const query = `select * from servecies where is_deleted=0 `;
   pool
     .query(query)
     .then((result) => {
@@ -118,12 +118,31 @@ WHERE cart.user_id = $1 `
             cart: result.rows,
           });
     })
-    .catch((error)=>{
-        res.status(500).json({
-            success: false,
-            message: "Server error",
-            err: error.message,
-          });
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: error.message,
+      });
+    });
+};
+const updateServicesById = (req, res) => {
+  const id = req.params.id;
+  const { name, description } = req.body;
+  const query = `UPDATE servecies
+SET 
+    name = COALESCE($1, name), 
+    description = COALESCE($2, description)
+WHERE id = $3 
+RETURNING *;`;
+  pool
+    .query(query, [name||null, description||null, id])
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `Servecies with id: ${id} updated successfully `,
+        Servecies:result.rows,
+      });
     })
 }
 
