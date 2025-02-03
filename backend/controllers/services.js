@@ -1,4 +1,4 @@
-const { pool } = require("../models/db");
+const pool  = require("../models/db");
 const getAllServices = (req, res) => {
   const query = `select * from servecies where is_deleted=0 `;
   pool
@@ -21,103 +21,102 @@ const getAllServices = (req, res) => {
 
 const getServicesById = (req, res) => {
   const id = req.params.id;
-  const query = `select * from servecies where servecies.id=$1 and servecies.is_deleted=0   `;
-  pool
-    .query(query, [id])
-    .then((result) => {
-      res.status(200).json({
+  const query = `select * from servecies where servecies.id=$1 and servecies.is_deleted=0 RETURNING *  `;
+pool.query(query,[id])
+.then((result)=>{
+    res.status(200).json({
         success: true,
         message: `The services with id: ${id}`,
         article: result.rows,
       });
-    })
-    .catch((error) => {
-      res.status(500).json({
+})
+.catch((error)=>{
+    res.status(500).json({
         success: false,
         message: "Server error",
         err: error.message,
       });
-    });
+})
 };
 
-const addToCart = (req, res) => {
+const createNewCart=(req,res)=>{
   const userId = req.token.userId;
-  const servecies = req.params.id;
-  console.log(userId);
-  console.log(servecies);
-
-  const query = `insert into Cart (userId,serveices) VALUES($1,$2) RETURNING * `;
   pool
-    .query(query, [userId, servecies])
+    .query(`INSERT INTO cart (user_id) VALUES ($1) RETURNING *`, [userId])
     .then((result) => {
       res.status(201).json({
         success: true,
-        message: "add to cart successfully",
-        result: result.rows,
-      });
-    })
-
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-      });
-    });
-};
-
-const getCartById = (req, res) => {
-  const userId = req.token.userId;
-  const query = ` select name,title,price from cart
-     inner join servecies on cart.serveices=servecies.id
-    inner join  parts on servecies.id= parts.service_id where cart.userId=$1 `;
-  pool
-    .query(query, [userId])
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: `The cart with id: ${id}`,
-        cart: result.rows,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-        err: error.message,
-      });
-    });
-};
-const createNewServices = (req, res) => {
-  const { name, description, image } = req.body;
-  const query = `INSERT INTO servecies (name,description,image) VALUES ($1,$2,$3) RETURNING * `
-  pool
-    .query(query, [name, description, image])
-    .then((result) => {
-      res.status(201).json({
-        success: true,
-        message: "Services created successfully",
+        message: "Cart created successfully",
         result: result.rows,
       });
     })
     .catch((error) => {
+      console.error(error);
       res.status(500).json({
         success: false,
         message: "Server error",
       });
     });
-};
-const deleteServicesById = (req, res) => {
-  const { id } = req.params;
-  const query = `UPDATE servecies
-SET is_deleted = 1
-WHERE servecies.id=$1 `;
+}
+
+const addToCart = (req,res)=>{
+    const { cart_id, parts_id } = req.body
+    const query =`insert into cart_parts (cart_id,parts_id) VALUES($1,$2) RETURNING * `
+    pool.query(query,[cart_id, parts_id])
+    .then((result)=>{
+        res.status(201).json({
+            success: true,
+            message: "added to cart successfully",
+            result: result.rows,
+          });
+
+    })
+    
+    .catch((error)=>{
+        res.status(500).json({
+            success: false,
+            message: "Server error",
+          });
+    })
+}
+
+const addPartsToCart = (req, res) => {
+  const { cart_id, parts_id } = req.body;
+  const query = `INSERT INTO cart_parts (cart_id, parts_id) VALUES ($1,$2) RETURNING *`;
+  const data = [cart_id, parts_id];
+
   pool
-    .query(query, [id])
+    .query(query, data)
     .then((result) => {
-      res.status(200).json({
+      res.status(201).json({
         success: true,
-        massage: `Services with id: ${id} deleted successfully`,
+        message: `Part added to cart successfully`,
+        result: result.rows,
       });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server error`,
+        err: err,
+      });
+    });
+};
+
+const getCartById=(req,res)=>{
+    const userId=req.token.userId
+    const query =`SELECT * FROM cart_parts 
+INNER JOIN cart ON cart_parts.cart_id = cart.id 
+INNER JOIN parts ON cart_parts.parts_id = parts.id 
+INNER JOIN servecies ON parts.service_id = servecies.id
+WHERE cart.user_id = $1 `
+    pool.query(query,[userId])
+    .then((result)=>{
+        res.status(200).json({
+            success: true,
+            message: `The cart with id: ${id}`,
+            cart: result.rows,
+          });
     })
     .catch((error) => {
       res.status(500).json({
@@ -145,20 +144,81 @@ RETURNING *;`;
         Servecies:result.rows,
       });
     })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-        err: error.message,
-      });
+}
+
+const createNewServices=(req,res)=>{
+  const {Name,Des,img}=req.body
+  const query=`insert  into orders (Name,Des,img) VALUES ($1,$2,$3) RETURNING * `
+  const data=[Name,Des,img]
+  pool.query(query,data)
+  .then((result)=>{
+    res.status(201).json({
+      success: true,
+      message: "Services created successfully",
+      result: result.rows,
     });
-};
+  })
+  .catch((error)=>{
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  })
+}
+
+
+const deleteServicesById=(req,res)=>{
+  const {id}=req.params
+  const query=`UPDATE servecies
+SET is_deleted = 1
+WHERE servecies.id=$1 `
+pool
+.query(query, [id])
+.then((result) => {
+  res.status(200).json({
+    success: true,
+    massage: `Services with id: ${id} deleted successfully`,
+  });
+})
+.catch((error) => {
+  res.status(500).json({
+    success: false,
+    message: "Server error",
+    err: error.message,
+  });
+})
+}
+const updateServicesById=(req,res)=>{
+  const id=req.params.id
+  const {Name,Des}=req.body
+  const query =`UPDATE servecies
+SET Name = $1, Des = $2 
+WHERE servecies.id=$3`
+pool
+.query(query,[Name,Des,id])
+.then((result) => {
+  res.status(200).json({
+    success: true,
+    message: `Servecies with id: ${id} updated successfully`,
+    article: result.rows,
+  });
+})
+.catch((error) => {
+  res.status(500).json({
+    success: false,
+    message: "Server error",
+    err: error.message,
+  });
+});
+}
 module.exports = {
   getAllServices,
   getServicesById,
+  createNewCart,
   addToCart,
   getCartById,
+  addPartsToCart,
   createNewServices,
   deleteServicesById,
-  updateServicesById,
+  updateServicesById
 };
