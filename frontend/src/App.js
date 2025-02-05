@@ -7,6 +7,10 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { AiFillFacebook,  AiFillInstagram, AiFillYoutube, AiFillLinkedin } from "react-icons/ai";
 import Location from "./components/Location/Location";
 import Register from "./components/Register/Register";
+import Login from "./components/Login/Login";
+import HowItWork from "./components/howItWork/howItWork";
+
+
 
 
 
@@ -38,12 +42,12 @@ const App = () => {
             {isLoggedIn ? (
               <>
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/HIW")}
                 >
                   How It Works
                 </button>
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/Services")}
 
                 >
                 Our Services
@@ -68,7 +72,7 @@ const App = () => {
             ) : (
               <>
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/HIW")}
                
                 >
                   How It Works
@@ -80,7 +84,7 @@ const App = () => {
                 Our Services
                 </button>
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/login")}
                
                 >
                 Log In
@@ -90,9 +94,13 @@ const App = () => {
           </div>
         </header>
       <Routes>
-        <Route path="/Services" element={<Location/>}/>
-        <Route path="/" element={<Register/>}/>
+        <Route path="/Services" element={<Services/>}/>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/Register" element={<Register/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/HIW" element={<HowItWork/>}/>
       </Routes>
+      
       <footer>
             <div>
             <AiFillLinkedin /><AiFillInstagram /><AiFillYoutube /><AiFillLinkedin />
