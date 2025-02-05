@@ -18,7 +18,8 @@ const serveciesRouter = express.Router();
 serveciesRouter.post("/",  authentication,createNewServices);
 serveciesRouter.delete("/:id", authentication, deleteServicesById);
 serveciesRouter.put("/:id", authentication, updateServicesById);
-serveciesRouter.get("/all", authentication, getAllServices);
+//====================authentication, 
+serveciesRouter.get("/all", getAllServices);
 serveciesRouter.get("/:id", authentication, getServicesById);
 serveciesRouter.post("/createCart", authentication, createNewCart);
 serveciesRouter.post("/addCart", authentication, addToCart);

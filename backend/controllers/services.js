@@ -1,4 +1,4 @@
-const pool  = require("../models/db");
+const {pool}  = require("../models/db");
 const getAllServices = (req, res) => {
   const query = `select * from servecies where is_deleted=0 `;
   pool

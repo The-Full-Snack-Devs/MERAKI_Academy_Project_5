@@ -1,10 +1,16 @@
 import "./App.css";
+
+
+import Home from "./components/Home"
+import Services from "./components/Services";
+
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { AiFillFacebook,  AiFillInstagram, AiFillYoutube, AiFillLinkedin } from "react-icons/ai";
 
-//===============================================================
+
+
 
 const App = () => {
   const navigate = useNavigate();
@@ -12,6 +18,11 @@ const App = () => {
   
   return (
     <div className="App">
+
+      <Services/>
+      <Routes>
+     
+
        <header>
           <div className="logo flex items-center ">
             <img
@@ -84,6 +95,7 @@ const App = () => {
         </header>
       <Routes>
         <Route/>
+
       </Routes>
       <footer>
             <div>
