@@ -8,11 +8,10 @@ const register = async (req, res) => {
   const { firstName, lastName, username, email, password,image,phone} =
     req.body;
   const encryptedPassword = await bcrypt.hash(password, saltRounds);
-  const query = `INSERT INTO users (firstName, lastName, username, email, password, role, image,phone) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`;
+  const query = `INSERT INTO users (firstName, lastName, email, password, role, image,phone) VALUES ($1,$2,$3,$4,$5,$6,$7)`;
   const data = [
     firstName,
     lastName,
-    username,
     email.toLowerCase(),
     encryptedPassword,
     "user",
