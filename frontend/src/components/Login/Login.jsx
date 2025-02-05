@@ -22,7 +22,9 @@ const Login = () => {
             navigate("/");
           })
           .catch(function (err) {
-            setRes(err.response.data.message);
+            console.log(err);
+            
+            setRes(err.message);
           });
         }
 
@@ -60,9 +62,7 @@ const Login = () => {
                   Log in
                 </button>
         
-                {Res && (
-                  {Res}
-                )}
+                {Res && (<p>{Res}</p>)}
         
                 <p>
                   Don't have an account?{" "}
