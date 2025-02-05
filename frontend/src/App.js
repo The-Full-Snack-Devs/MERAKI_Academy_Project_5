@@ -1,14 +1,12 @@
 import "./App.css";
-
-
 import Home from "./components/Home"
 import Services from "./components/Services";
-
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { AiFillFacebook,  AiFillInstagram, AiFillYoutube, AiFillLinkedin } from "react-icons/ai";
-
+import Location from "./components/Location/Location";
+import Register from "./components/Register/Register";
 
 
 
@@ -19,9 +17,7 @@ const App = () => {
   return (
     <div className="App">
 
-      <Services/>
-      <Routes>
-     
+      
 
        <header>
           <div className="logo flex items-center ">
@@ -78,7 +74,7 @@ const App = () => {
                   How It Works
                 </button>
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/Services")}
               
                 >
                 Our Services
@@ -94,8 +90,8 @@ const App = () => {
           </div>
         </header>
       <Routes>
-        <Route/>
-
+        <Route path="/Services" element={<Register/>}/>
+        <Route path="/" element={<Location/>}/>
       </Routes>
       <footer>
             <div>
