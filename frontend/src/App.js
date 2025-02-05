@@ -90,8 +90,8 @@ const App = () => {
           </div>
         </header>
       <Routes>
-        <Route path="/Services" element={<Register/>}/>
-        <Route path="/" element={<Location/>}/>
+        <Route path="/Services" element={<Location/>}/>
+        <Route path="/" element={<Register/>}/>
       </Routes>
       <footer>
             <div>
