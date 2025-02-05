@@ -4,20 +4,21 @@ const bcrypt = require("bcryptjs");
 const saltRounds = parseInt(process.env.SALT);
 
 const register = async (req, res) => {
-  let x;
-  const { firstName, lastName, username, email, password,image,phone} =
-    req.body;
+  console.log(req.body);
+  
+  const { firstName, lastName, email, password,image,phone, lat, lng} = req.body;
   const encryptedPassword = await bcrypt.hash(password, saltRounds);
-  const query = `INSERT INTO users (firstName, lastName, username, email, password, role, image,phone) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`;
+  const query = `INSERT INTO users (firstName, lastName, email, password, role, image,phone,lat,lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
   const data = [
     firstName,
     lastName,
-    username,
     email.toLowerCase(),
     encryptedPassword,
     "user",
     image,
     phone,
+    lat,
+    lng
   ];
   pool
     .query(query, data)
@@ -28,6 +29,8 @@ const register = async (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
+      
       res.status(409).json({
         success: false,
         message: "The email already exists",
