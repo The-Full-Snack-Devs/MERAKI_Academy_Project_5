@@ -1,5 +1,4 @@
 import React from "react";
-import "./howItWork.css"; 
 
 const HowItWork = () => {
   return (
