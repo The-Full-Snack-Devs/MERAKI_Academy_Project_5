@@ -1,6 +1,5 @@
 import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/api";
 import { useState } from "react";
-
 const libraries = ["places"];
 
 function Location() {
