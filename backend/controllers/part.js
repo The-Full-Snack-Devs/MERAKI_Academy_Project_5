@@ -72,7 +72,7 @@ const getPartById = (req, res) => {
 
 const getPartsByServiceId = (req, res) => {
   const id = req.params.service_id;
-  const query = `SELECT * FROM parts WHERE service_id=$1 AND is_deleted=0;`;
+  const query = `SELECT * FROM parts INNER JOIN servecies ON servecies.id = parts.service_id WHERE  service_id=$1 AND is_deleted=0;`;
   const data = [id];
 
   pool

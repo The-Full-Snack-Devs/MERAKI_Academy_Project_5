@@ -7,7 +7,7 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { AiFillFacebook,  AiFillInstagram, AiFillYoutube, AiFillLinkedin } from "react-icons/ai";
 import Location from "./components/Location/Location";
 import Register from "./components/Register/Register";
-
+import DetailsServices from "./components/DetailsServices";
 
 
 const App = () => {
@@ -89,9 +89,10 @@ const App = () => {
             )}
           </div>
         </header>
+        <DetailsServices/>
       <Routes>
         <Route path="/Services" element={<Location/>}/>
-        <Route path="/" element={<Register/>}/>
+        <Route path="/" element={<Services/>}/>
       </Routes>
       <footer>
             <div>
