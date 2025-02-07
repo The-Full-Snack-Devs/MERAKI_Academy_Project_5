@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setServices } from "../redux/reducers/services";
+import { useNavigate } from "react-router-dom";
 
 const Services = () => {
   const services = useSelector((redusers) => redusers.servicesReduser.services);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const getAllServices = () => {
@@ -30,7 +32,10 @@ const Services = () => {
           <img src={ele.image} />
           <p>{ele.name}</p>
           <p>{ele.description}</p>
-          <button id={ele.id}>
+          <button id={ele.id} 
+          onClick={(e)=>navigate(`/DServices/${e.target.id}`)
+        }
+          >
             details
             {/* on click send the id whith navigate to component details*/}
           </button>

@@ -9,6 +9,7 @@ import Location from "./components/Location/Location";
 import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import HowItWork from "./components/howItWork/howItWork";
+import DetailsServices from "./components/DetailsServices/DetailsServices";
 
 
 
@@ -95,6 +96,8 @@ const App = () => {
         </header>
       <Routes>
         <Route path="/Services" element={<Services/>}/>
+        <Route path="/DServices/:id" element={<DetailsServices/>}/>
+
         <Route path="/" element={<Home/>}/>
         <Route path="/Register" element={<Register/>}/>
         <Route path="/login" element={<Login/>}/>
