@@ -1,4 +1,5 @@
 const {pool}  = require("../models/db");
+const { login } = require("./users");
 const getAllServices = (req, res) => {
   const query = `select * from servecies where is_deleted=0 `;
   pool
@@ -84,6 +85,8 @@ const addToCart = (req,res)=>{
 
 const getCartById=(req,res)=>{
     const userId=req.token.userId
+    console.log(userId);
+    
     const query =`SELECT * FROM cart_parts 
 INNER JOIN cart ON cart_parts.cart_id = cart.id 
 INNER JOIN parts ON cart_parts.parts_id = parts.id 
@@ -93,7 +96,7 @@ WHERE cart.user_id = $1 `
     .then((result)=>{
         res.status(200).json({
             success: true,
-            message: `The cart with id: ${id}`,
+            message: `The cart with id`,
             cart: result.rows,
           });
     })

@@ -10,6 +10,7 @@ import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import HowItWork from "./components/howItWork/howItWork";
 import DetailsServices from "./components/DetailsServices/DetailsServices";
+import Cart from "./components/Cart/Cart";
 
 
 
@@ -60,7 +61,7 @@ const App = () => {
                 Profile
                 </button>
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/Cart")}
                 >
                   Cart
                 </button>
@@ -97,6 +98,7 @@ const App = () => {
       <Routes>
         <Route path="/Services" element={<Services/>}/>
         <Route path="/DServices/:id" element={<DetailsServices/>}/>
+        <Route path="/Cart" element={<Cart/>}/>
 
         <Route path="/" element={<Home/>}/>
         <Route path="/Register" element={<Register/>}/>
