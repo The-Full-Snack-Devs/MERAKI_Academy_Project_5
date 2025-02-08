@@ -11,15 +11,13 @@ import Login from "./components/Login/Login";
 import HowItWork from "./components/howItWork/howItWork";
 import DetailsServices from "./components/DetailsServices/DetailsServices";
 import Cart from "./components/Cart/Cart";
-
-
-
-
+import { setLogout } from "../src/components/redux/reducers/auth/index"
 
 const App = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((reducers) => reducers.authReducer.isLoggedIn);
-  
+  const dispatch = useDispatch();
+
   return (
     <div className="App">
 
@@ -66,7 +64,7 @@ const App = () => {
                   Cart
                 </button>
                 <button
-                  onClick={() => navigate("/")}
+                  onClick={()=>{dispatch(setLogout())}}
                 >
                   Log Out
                 </button>
