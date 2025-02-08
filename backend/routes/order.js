@@ -8,7 +8,10 @@ const {
   deleteOrderById,
 } = require("../controllers/order");
 
-router.post("/", createNewOrder)
+const authentication = require("../middlewares/authentication");
+
+
+router.post("/",authentication, createNewOrder)
 router.get("/", getAllOrders);
 router.get("/:id", getOrderById);
 router.put("/:id", updateOrderById);

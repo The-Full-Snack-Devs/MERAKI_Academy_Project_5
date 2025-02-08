@@ -42,19 +42,22 @@ const register = async (req, res) => {
 const login = (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
-  const query = `SELECT * FROM users WHERE email = $1`;
+  const query = `SELECT * FROM users 
+  INNER JOIN cart ON users.id = cart.user_id
+  WHERE email = $1`;
   const data = [email.toLowerCase()];
   pool
     .query(query, data)
     .then((result) => {
+      console.log(result.rows[0]);
       if (result.rows.length) {
         bcrypt.compare(password, result.rows[0].password, (err, response) => {
           if (err) res.json(err);
           if (response) {
             const payload = {
               userId: result.rows[0].id,
-              country: result.rows[0].country,
               role: result.rows[0].role_id,
+              cart_id: result.rows[0].idc
             };
             const options = { expiresIn: "1d" };
             const secret = process.env.SECRET;
@@ -88,7 +91,37 @@ const login = (req, res) => {
     });
 };
 
+const getProfile = (req, res) => {
+  let id = req.token.userId;
+  const query = `SELECT * FROM users 
+  WHERE id = $1`;
+  const data = [id];
+  pool
+  .query(query, data)
+    .then((User) => {
+      if (!User) {
+        return res.status(404).json({
+          success: false,
+          message: `The User with id => ${id} not found`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `The User ${id} `,
+        User: User.rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+};
+
 module.exports = {
   register,
   login,
+  getProfile
 };

@@ -60,8 +60,12 @@ const createNewCart=(req,res)=>{
     });
 }
 
-const addToCart = (req,res)=>{
-    const { cart_id, parts_id } = req.body
+const addToCart = (req,res)=>{ 
+  
+  
+  cart_id = req.token.cart_id   
+  parts_id = req.params.id
+  console.log(cart_id, parts_id);
     const query =`insert into cart_parts (cart_id,parts_id) VALUES($1,$2) RETURNING * `
     pool.query(query,[cart_id, parts_id])
     .then((result)=>{
@@ -86,10 +90,9 @@ const addToCart = (req,res)=>{
 const getCartById=(req,res)=>{
     const userId=req.token.userId
     console.log(userId);
-    
     const query =`SELECT * FROM cart_parts 
-INNER JOIN cart ON cart_parts.cart_id = cart.id 
-INNER JOIN parts ON cart_parts.parts_id = parts.id 
+INNER JOIN cart ON cart_parts.cart_id = cart.idc 
+INNER JOIN parts ON cart_parts.parts_id = parts.idp
 INNER JOIN servecies ON parts.service_id = servecies.id
 WHERE cart.user_id = $1 `
     pool.query(query,[userId])

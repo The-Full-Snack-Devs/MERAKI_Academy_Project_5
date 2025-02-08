@@ -1,7 +1,6 @@
 import "./App.css";
 import Home from "./components/Home"
 import Services from "./components/Services";
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { AiFillFacebook,  AiFillInstagram, AiFillYoutube, AiFillLinkedin } from "react-icons/ai";
@@ -12,6 +11,7 @@ import HowItWork from "./components/howItWork/howItWork";
 import DetailsServices from "./components/DetailsServices/DetailsServices";
 import Cart from "./components/Cart/Cart";
 import { setLogout } from "../src/components/redux/reducers/auth/index"
+import TL from "./components/Time/Location/TL";
 
 const App = () => {
   const navigate = useNavigate();
@@ -20,9 +20,6 @@ const App = () => {
 
   return (
     <div className="App">
-
-      
-
        <header>
           <div className="logo flex items-center ">
             <img
@@ -97,7 +94,7 @@ const App = () => {
         <Route path="/Services" element={<Services/>}/>
         <Route path="/DServices/:id" element={<DetailsServices/>}/>
         <Route path="/Cart" element={<Cart/>}/>
-
+        <Route path="/TL" element={<TL/>}/>
         <Route path="/" element={<Home/>}/>
         <Route path="/Register" element={<Register/>}/>
         <Route path="/login" element={<Login/>}/>
