@@ -12,7 +12,7 @@ const {
 router.post("/", createNewPart);
 router.get("/", getAllParts);
 router.get("/:id", getPartById);
-router.get("/service/:service_id", getPartsByServiceId);
+router.get("/service/:id", getPartsByServiceId);
 router.put("/:id", updatePartById);
 router.delete("/:id", deletePartById);
 

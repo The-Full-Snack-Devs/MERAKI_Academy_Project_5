@@ -1,4 +1,4 @@
-const pool = require("../models/db");
+const {pool }= require("../models/db");
 
 const createNewPart = (req, res) => {
   const { title, price, service_id } = req.body;
@@ -45,7 +45,7 @@ const getAllParts = (req, res) => {
 
 const getPartById = (req, res) => {
   const id = req.params.id;
-  const query = `SELECT title, price, service_id FROM parts WHERE parts.id=$1 AND parts.is_deleted=0;`;
+  const query = `SELECT * FROM parts WHERE parts.id=$1 AND parts.is_deleted=0;`;
   const data = [id];
 
   pool
@@ -71,8 +71,8 @@ const getPartById = (req, res) => {
 };
 
 const getPartsByServiceId = (req, res) => {
-  const id = req.params.service_id;
-  const query = `SELECT * FROM parts WHERE service_id=$1 AND is_deleted=0;`;
+  const id = req.params.id;
+  const query = `SELECT * FROM parts inner  join  servecies on servecies.id=parts.service_id  WHERE parts.service_id=$1 AND parts.is_deleted=0;`;
   const data = [id];
 
   pool
