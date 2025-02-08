@@ -20,10 +20,10 @@ serveciesRouter.delete("/:id", authentication, deleteServicesById);
 serveciesRouter.put("/:id", authentication, updateServicesById);
 //====================authentication, 
 serveciesRouter.get("/all", getAllServices);
-serveciesRouter.get("/:id", authentication, getServicesById);
 serveciesRouter.post("/createCart", authentication, createNewCart);
-serveciesRouter.post("/addCart", authentication, addToCart);
-serveciesRouter.get("/get/Cart", authentication, getCartById);
+serveciesRouter.post("/addCart/:id", authentication, addToCart);
+serveciesRouter.get("/getCart", authentication, getCartById);
+serveciesRouter.get("/:id", authentication, getServicesById);
 
 
 

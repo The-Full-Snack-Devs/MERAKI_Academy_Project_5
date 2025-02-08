@@ -2,7 +2,8 @@ const pool = require("../models/db");
 
 const createNewOrder = (req, res) => {
   const userId = req.token.userId
-  const {cart} = req.body
+  const cart = req.token.cart_id
+  
   const query = `INSERT INTO orders (user, cart) VALUES ($1, $2) RETURNING *;`;
   const data = [userId, cart];
   pool

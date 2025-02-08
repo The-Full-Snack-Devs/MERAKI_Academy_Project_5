@@ -9,10 +9,12 @@ const {
   deletePartById,
 } = require("../controllers/part");
 
+const authentication = require("../middlewares/authentication");
+
 router.post("/", createNewPart);
 router.get("/", getAllParts);
 router.get("/:id", getPartById);
-router.get("/service/:id", getPartsByServiceId);
+router.get("/service/:id", authentication, getPartsByServiceId);
 router.put("/:id", updatePartById);
 router.delete("/:id", deletePartById);
 
