@@ -25,13 +25,11 @@ function TL() {
 
     const getCartById=()=>{
         axios.get(`http://localhost:5000/users`, { headers })
-        .then((result)=>{  
-            console.log(typeof Number(result.data.User.lng));
-            
+        .then((result)=>{            
             setPosition({ lat: Number(result.data.User.lat), lng: Number(result.data.User.lng) })
         })
         .catch((error)=>{
-    console.log(error);
+        console.log(error);
         })
     }
 
@@ -92,6 +90,7 @@ function TL() {
         setSavedLocation(position); 
         // setnewUser({...newUser, ...{position}})
         setnewUser({...newUser, position})
+        console.log(newUser);
         alert(`Location saved`);    
       };
 
