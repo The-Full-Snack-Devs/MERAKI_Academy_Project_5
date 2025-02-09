@@ -1,19 +1,21 @@
-const pool = require("../models/db");
+const {pool} = require("../models/db");
 
 const createNewOrder = (req, res) => {
   const userId = req.token.userId
   const cart = req.token.cart_id
+  const {date_time , position} = req.body
   
-  const query = `INSERT INTO orders (user, cart) VALUES ($1, $2) RETURNING *;`;
-  const data = [userId, cart];
-  pool
-    .query(query, data)
+  const query = `INSERT INTO orders (user_id, cart_id, date_time, location) VALUES ($1,$2,$3,$4) RETURNING *`;
+  const data = [userId, cart, date_time, JSON.stringify(position)];
+  pool.query(query, data)
     .then((result) => {
       res.status(200).json({
         success: true,
         message: "Order created successfully",
         result: result.rows[0],
       });
+      console.log("done");
+      
     })
     .catch((err) => {
       res.status(500).json({
@@ -21,6 +23,7 @@ const createNewOrder = (req, res) => {
         message: "Server error",
         err: err,
       });
+      console.log(err);
     });
 };
 
@@ -69,6 +72,8 @@ const getOrderById = (req, res) => {
         message: "Server error",
         err: err,
       });
+     
+      
     });
 };
 
