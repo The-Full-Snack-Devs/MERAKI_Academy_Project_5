@@ -1,9 +1,9 @@
 import React,{ useEffect } from 'react'
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setCart } from '../redux/reducers/cart';
+import { setCart } from "../../Service/redux/reducers/cart";
 import { useNavigate } from "react-router-dom";
-
+import { apiClient } from '../../Service/api/api';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -16,21 +16,28 @@ const Cart = () => {
       };
     const dispatch = useDispatch();
 
-    const getCartById=()=>{
-    axios.get("http://localhost:5000/services/getCart", { headers })
-    .then((result)=>{
-        console.log(11);
-        console.log("jjjjjjjjjjj:",cart);
+const getCartById= async ()=>{
+//     axios.get("http://localhost:5000/services/getCart", { headers })
+//     .then((result)=>{
+//         console.log(11);
+//         console.log("jjjjjjjjjjj:",cart);
         
-        console.log(result.data.cart);
-        dispatch(setCart(result.data.cart));
+//         console.log(result.data.cart);
+//         dispatch(setCart(result.data.cart));
 
 
-    })
-    .catch((error)=>{
-console.log(error);
+//     })
+//     .catch((error)=>{
+// console.log(error);
 
-    })
+//     })
+
+try {
+  const result = await apiClient.cart.getCartById(token)
+  dispatch(setCart(result.data.cart));
+} catch (error) {
+  console.log(error);
+}
 
 }
 useEffect(() => {
