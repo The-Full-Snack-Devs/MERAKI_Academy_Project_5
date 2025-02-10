@@ -8,6 +8,7 @@ import TL from "../pages/Time/Location/TL"
 import Register from "../pages/Register/Register"
 import Login from "../pages/Login/Login"
 import HowItWork from "../pages/howItWork/howItWork.jsx"
+import Order from "../pages/Order/Order.jsx";
 
 export const router = createBrowserRouter([
 {
@@ -39,6 +40,9 @@ export const router = createBrowserRouter([
         },{
             path: "HIW",
             element: <HowItWork/>,  
+        },{
+            path: "orders",
+            element: <Order/>,  
         },
     ]
 }

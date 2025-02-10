@@ -58,15 +58,9 @@ WHERE email = $1`;
           if (err) res.json(err);
           if (response) {
             // ==============Create Cart==============
-            console.log(result.rows[0].idc,!result.rows[0].idc);
-            
-          if (!result.rows[0].idc) {
-            
-          }
             pool
     .query(`INSERT INTO cart (user_id) VALUES ($1) RETURNING *`, [result.rows[0].id])
     .then((result) => {
-      x = result.rows[0].idc
     })
     .catch((error) => {
       console.error(error);
@@ -74,8 +68,9 @@ WHERE email = $1`;
     // ===========================
             const payload = {
               userId: result.rows[0].id,
-              role: result.rows[0].role_id,
-              cart_id: result.rows[0].idc || x
+              role: result.rows[0].role,
+              cart_id: result.rows[0].idc
+
             };
             console.log(payload);
             
@@ -87,7 +82,8 @@ WHERE email = $1`;
                 token,
                 success: true,
                 message: `Valid login credentials`,
-                userId:result.rows[0].id
+                userId:result.rows[0].id,
+                role: result.rows[0].role
               });
             } else {
               throw Error;

@@ -7,7 +7,9 @@ const Navbar = () => {
 
 const navigate = useNavigate();
 const isLoggedIn = useSelector((reducers) => reducers.authReducer.isLoggedIn);
+const role = useSelector((reducers) => reducers.authReducer.Role);
 const dispatch = useDispatch()
+
 
 return (
   <header>
@@ -28,6 +30,13 @@ return (
   <div>
     {isLoggedIn ? (
       <>
+        {role === "admin" && (
+        <button
+          onClick={() => navigate("/orders")}
+          >
+          Orders
+        </button>
+    )}
         <button
           onClick={() => navigate("/HIW")}
         >
