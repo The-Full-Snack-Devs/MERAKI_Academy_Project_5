@@ -46,7 +46,6 @@ const createNewOrder = (req, res) => {
 
 const getAllOrders = (req, res) => {
   const query = `SELECT * FROM orders WHERE orders.is_deleted=0;`;
-
   pool
     .query(query)
     .then((result) => {

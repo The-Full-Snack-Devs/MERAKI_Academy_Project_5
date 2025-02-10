@@ -11,6 +11,7 @@ const DetailsServices = () => {
     const { id } = useParams();
     const detailsServices =useSelector((redusers)=>redusers.DetailsServicesReduser.detailsServices)
     const dispatch=useDispatch()
+    const cart_id =useSelector((redusers)=>redusers.authReducer.Cart_id)
 
     const token=useSelector((reduser)=>reduser.authReducer.token)
 
@@ -37,7 +38,7 @@ const DetailsServices = () => {
     }
 
     const addPartToCart=(id)=>{
-      axios.post(`http://localhost:5000/services/addCart/${id}`,{}, {headers})
+      axios.post(`http://localhost:5000/services/addCart/${id}`,{cart_id}, {headers})
       .then((result)=>{
         console.log(result.data);
       })

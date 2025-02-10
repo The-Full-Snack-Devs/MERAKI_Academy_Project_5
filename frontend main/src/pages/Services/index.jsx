@@ -52,6 +52,7 @@ const Services = () => {
             details
             {/* on click send the id whith navigate to component details*/}
           </button>
+          
         </div>
       ))}
     </div>

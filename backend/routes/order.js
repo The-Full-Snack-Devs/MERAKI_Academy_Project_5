@@ -9,10 +9,12 @@ const {
 } = require("../controllers/order");
 
 const authentication = require("../middlewares/authentication");
+const authorization = require("../middlewares/authorization");
+
 
 
 router.post("/",authentication, createNewOrder)
-router.get("/", getAllOrders);
+router.get("/",authentication, getAllOrders);
 router.get("/:id", getOrderById);
 router.put("/:id", updateOrderById);
 router.delete("/:id", deleteOrderById);
