@@ -7,6 +7,7 @@ const authSlice = createSlice({
     token: localStorage.getItem("token") || null,
     isLoggedIn: localStorage.getItem("token") ? true : false,
     Cart_id: null
+    //for test
   },
   reducers: {
     setLogin: (state, action) => {
