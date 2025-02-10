@@ -8,6 +8,8 @@ import TL from "../pages/Time/Location/TL"
 import Register from "../pages/Register/Register"
 import Login from "../pages/Login/Login"
 import HowItWork from "../pages/howItWork/howItWork.jsx"
+import PartDash from "../pages/PartDash/PartDash"
+
 
 export const router = createBrowserRouter([
 {
@@ -39,6 +41,10 @@ export const router = createBrowserRouter([
         },{
             path: "HIW",
             element: <HowItWork/>,  
+        },
+        {
+            path: "/parts",
+            element: <PartDash/>
         },
     ]
 }
