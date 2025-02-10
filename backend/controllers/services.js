@@ -61,9 +61,8 @@ const createNewCart=(req,res)=>{
 }
 
 const addToCart = (req,res)=>{ 
-  
-  
-  cart_id = req.token.cart_id   
+  newId = req.body.cart_id
+  cart_id = newId || req.token.cart_id   
   parts_id = req.params.id
   console.log(cart_id, parts_id);
     const query =`insert into cart_parts (cart_id,parts_id) VALUES($1,$2) RETURNING * `
@@ -76,8 +75,9 @@ const addToCart = (req,res)=>{
           });
 
     })
-    
     .catch((error)=>{
+      console.log(error);
+      
         res.status(500).json({
             success: false,
             message: "Server error",
@@ -90,11 +90,12 @@ const addToCart = (req,res)=>{
 const getCartById=(req,res)=>{
     const userId=req.token.userId
     console.log(userId);
-    const query =`SELECT * FROM cart_parts 
+    const query =`SELECT * FROM cart_parts
 INNER JOIN cart ON cart_parts.cart_id = cart.idc 
 INNER JOIN parts ON cart_parts.parts_id = parts.idp
 INNER JOIN servecies ON parts.service_id = servecies.id
-WHERE cart.user_id = $1 `
+INNER JOIN users ON users.id = cart.user_id
+WHERE cart.user_id = $1 AND cart.status = 'user'`
     pool.query(query,[userId])
     .then((result)=>{
         res.status(200).json({
