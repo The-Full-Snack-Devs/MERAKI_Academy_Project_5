@@ -62,7 +62,7 @@ function TL() {
           
           alert("Your order has been created successfully")
           navigate("/")
-          // dispatch(setCartId())
+          dispatch(setCartId(result.data.result))
 
         } catch (error) {
           

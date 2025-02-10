@@ -12,6 +12,7 @@ const DetailsServices = () => {
     const detailsServices =useSelector((redusers)=>redusers.DetailsServicesReduser.detailsServices)
     const dispatch=useDispatch()
     const cart_id =useSelector((redusers)=>redusers.authReducer.Cart_id)
+console.log(cart_id);
 
     const token=useSelector((reduser)=>reduser.authReducer.token)
 
