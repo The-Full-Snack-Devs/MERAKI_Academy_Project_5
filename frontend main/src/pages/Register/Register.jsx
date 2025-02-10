@@ -33,13 +33,12 @@ function Register() {
 
     try {
       const result = await apiClient.users.register(newUser)
-
+      console.log(result);
       setRes(result.data.message);
       setShow(true);
     } catch (error) {
       setRes(error.response.data.message);
       setShow(true);
-     
     }
   };
 

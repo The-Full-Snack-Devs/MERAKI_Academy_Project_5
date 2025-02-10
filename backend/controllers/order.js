@@ -4,18 +4,35 @@ const createNewOrder = (req, res) => {
   const userId = req.token.userId
   const cart = req.token.cart_id
   const {date_time , position} = req.body
-  
+  console.log(req.body);
   const query = `INSERT INTO orders (user_id, cart_id, date_time, location) VALUES ($1,$2,$3,$4) RETURNING *`;
   const data = [userId, cart, date_time, JSON.stringify(position)];
   pool.query(query, data)
     .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: "Order created successfully",
-        result: result.rows[0],
-      });
-      console.log("done");
-      
+            pool
+      .query(`UPDATE cart
+              SET 
+              status = 'order'
+              WHERE idc = $1
+              RETURNING *;`, [cart])
+      .then((result) => {
+      })
+      .catch((error) => {
+        console.error(error);
+      }); 
+
+      pool
+      .query(`INSERT INTO cart (user_id) VALUES ($1) RETURNING *`, [userId])
+      .then((result) => {
+        res.status(200).json({
+          success: true,
+          message: "Order created successfully",
+          result: result.rows[0].idc,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      }); 
     })
     .catch((err) => {
       res.status(500).json({
