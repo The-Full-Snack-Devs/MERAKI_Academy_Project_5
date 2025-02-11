@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setServices,addServices } from "../../Service/redux/reducers/services";
+import { setServices,addServices,updateServices,deleteServices } from "../../Service/redux/reducers/services";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from '../../Service/api/api';
 
@@ -12,28 +12,19 @@ const Services = () => {
   const token=useSelector((reduser)=>reduser.authReducer.token)
 
 console.log(role);
-// const [newService, setNewService] = useState()
 const [name, setName] = useState("")
 const [image, setImage] = useState("")
 const [description, setDescription] = useState("")
 const newService={name,image,description}
-  const navigate = useNavigate();
+  
+  const [openUpdate, setOpenUpdate] = useState(false)
+  const servicesAfterUpdatte={name,description}
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
 
   const getAllServices = async () => {
-    // axios
-    //   .get("http://localhost:5000/services/all")
-    //   .then((result) => {
-    //     console.log(result.data.servecies);
-
-    //     dispatch(setServices(result.data.servecies));
-    //     console.log("gggggggg", services);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+   
 
       try {
         const result = await apiClient.services.getAllServices()
@@ -57,6 +48,23 @@ const newService={name,image,description}
       }
 
   };
+  const updateServicesById = async (id) => {
+    console.log("idddddd:",id);
+    
+    try {
+      const result = await apiClient.services.update(id,servicesAfterUpdatte,token)
+      console.log(result);
+      
+      dispatch(updateServices(result.data.Servecies));
+      getAllServices();
+      
+    } catch (error) {
+      console.log(error);
+    }
+
+};
+const upd
+
   useEffect(() => {
     getAllServices();
   }, []);
@@ -90,7 +98,23 @@ const newService={name,image,description}
             details
             {/* on click send the id whith navigate to component details*/}
           </button>
+          {openUpdate !== ele.id && (
+      <button onClick={() => setOpenUpdate(ele.id)}>update</button>
+    )}
           
+          {openUpdate === ele.id && (
+      <>
+<input placeholder="name" value={services.name} onChange={(e)=>{
+        setName(e.target.value)
+      }}/>  
+            <input placeholder="description" onChange={(e) => setDescription(e.target.value)} />
+        <button onClick={() => {
+          setOpenUpdate(null)
+          updateServicesById(ele.id)
+          }}>save Update</button>
+      </>
+    )}
+         
         </div>
       ))}
       
