@@ -63,7 +63,19 @@ const newService={name,image,description}
     }
 
 };
-const upd
+const deleteServicesById =async (id)=>{
+  try {
+    const result = await apiClient.services.delete(id,token)
+    console.log(result);
+    
+    dispatch(deleteServices(id));
+    // getAllServices();
+    
+  } catch (error) {
+    console.log(error);
+  }
+
+}
 
   useEffect(() => {
     getAllServices();
@@ -71,7 +83,7 @@ const upd
 
   return (
     <div>
-      {role==="Admin"&&<>
+      {role==="admin"&&<>
         <button onClick={addNewServices}>add</button>
       <input placeholder="name" value={services.name} onChange={(e)=>{
         setName(e.target.value)
@@ -98,7 +110,10 @@ const upd
             details
             {/* on click send the id whith navigate to component details*/}
           </button>
-          {openUpdate !== ele.id && (
+
+          {/* update  */}
+          {role==="admin"&&<>
+            {openUpdate !== ele.id && (
       <button onClick={() => setOpenUpdate(ele.id)}>update</button>
     )}
           
@@ -114,7 +129,14 @@ const upd
           }}>save Update</button>
       </>
     )}
-         
+          </>}
+{role==="admin"&&<>
+  <button onClick={()=>{
+          deleteServicesById(ele.id)
+         }}>delete</button>
+
+</>}
+        
         </div>
       ))}
       
