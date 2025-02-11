@@ -35,6 +35,8 @@ const Login = () => {
             dispatch(setLogin(result.data.token)) 
             dispatch(setUserId(result.data.userId))
             dispatch(setRole(result.data.role))
+            console.log("role",result.data.role);
+            
             navigate("/");
         } catch (error) {
           console.log(error);

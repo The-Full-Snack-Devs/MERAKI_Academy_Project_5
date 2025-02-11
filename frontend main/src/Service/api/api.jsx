@@ -33,6 +33,17 @@ export const apiClient = {
     getAllServices: async () => {
         return await axios.get(`/services/all`);
       },
+      addNewServices:async (newServices,token)=>{
+        return await axios.post(`/services/`,newServices,appendHeadrs(token))
+      },
+      update:async (id,servicesAfterUpdatte,token)=>{
+        return await axios.put(`/services/${id}`,servicesAfterUpdatte,appendHeadrs(token))
+
+      },
+      delete: async (id,token)=>{
+        return await axios.delete(`/services/${id}`,appendHeadrs(token))
+
+      }
   },
   orders:{
     createOrder: async (newUser, token) => {
