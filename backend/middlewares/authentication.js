@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const authentication = (req, res, next) => {
   try { 
+    console.log(req.headers.authorization);
     if (!req.headers.authorization)
       res.status(403).json({ message: "forbidden" });
 
@@ -13,7 +14,7 @@ const authentication = (req, res, next) => {
           success: false,
           message: `The token is invalid or expired`,
         });
-      } else {
+      } else {       
         req.token = result;
         next();
       }

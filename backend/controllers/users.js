@@ -23,6 +23,8 @@ const register = async (req, res) => {
   pool
     .query(query, data)
     .then((result) => {
+      console.log(result);
+      
       res.status(200).json({
         success: true,
         message: "Account created successfully",
@@ -40,11 +42,12 @@ const register = async (req, res) => {
 };
 
 const login = (req, res) => {
+  let x;
   const password = req.body.password;
   const email = req.body.email;
   const query = `SELECT * FROM users 
-  INNER JOIN cart ON users.id = cart.user_id
-  WHERE email = $1`;
+FULL OUTER JOIN cart ON users.id = cart.user_id AND cart.status = 'user'
+WHERE email = $1`;
   const data = [email.toLowerCase()];
   pool
     .query(query, data)
@@ -54,11 +57,23 @@ const login = (req, res) => {
         bcrypt.compare(password, result.rows[0].password, (err, response) => {
           if (err) res.json(err);
           if (response) {
+            // ==============Create Cart==============
+            pool
+    .query(`INSERT INTO cart (user_id) VALUES ($1) RETURNING *`, [result.rows[0].id])
+    .then((result) => {
+    })
+    .catch((error) => {
+      console.error(error);
+    }); 
+    // ===========================
             const payload = {
               userId: result.rows[0].id,
-              role: result.rows[0].role_id,
+              role: result.rows[0].role,
               cart_id: result.rows[0].idc
+
             };
+            console.log(payload);
+            
             const options = { expiresIn: "1d" };
             const secret = process.env.SECRET;
             const token = jwt.sign(payload, secret, options);
@@ -67,7 +82,8 @@ const login = (req, res) => {
                 token,
                 success: true,
                 message: `Valid login credentials`,
-                userId:result.rows[0].id
+                userId:result.rows[0].id,
+                role: result.rows[0].role
               });
             } else {
               throw Error;

@@ -7,9 +7,9 @@ import Services from "../pages/Services/index.jsx"
 import TL from "../pages/Time/Location/TL"
 import Register from "../pages/Register/Register"
 import Login from "../pages/Login/Login"
-import HowItWork from "../pages/howItWork/howItWork.jsx"
-import PartDash from "../pages/PartDash/PartDash"
-
+import HowItWork from "../pages/howItWork/howItWo
+import PartDash from "../pages/PartDash/PartDash
+import Order from "../pages/Order/Order.jsx"
 
 export const router = createBrowserRouter([
 {
@@ -41,9 +41,12 @@ export const router = createBrowserRouter([
         },{
             path: "HIW",
             element: <HowItWork/>,  
+        },{
+            path: "orders",
+            element: <Order/>,  
         },
         {
-            path: "/parts",
+            path: "parts",
             element: <PartDash/>
         },
     ]

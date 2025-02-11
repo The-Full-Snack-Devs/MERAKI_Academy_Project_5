@@ -6,9 +6,7 @@ import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/
 const libraries = ["places"];
 import { apiClient } from '../../../Service/api/api';
 import { useNavigate } from "react-router-dom";
-
-
-
+import { setCartId } from "../../../Service/redux/reducers/auth/index"
 
 function TL() {
 
@@ -20,6 +18,7 @@ function TL() {
     const [userLocation, setUserLocation] = useState(null);
     const [savedLocation, setSavedLocation] = useState(null); 
     const [newUser, setnewUser] = useState({});
+    const dispatch = useDispatch()
 
     const onLoad = (autoC) => setAutocomplete(autoC);
     const token=useSelector((reduser)=>reduser.authReducer.token)
@@ -40,7 +39,8 @@ function TL() {
         try {
           const result = await apiClient.cart.getCartById(token)
               console.log(position);
-              setPosition({ lat: Number(result.data.User.lat), lng: Number(result.data.User.lng) })
+              console.log(result);
+              setPosition({ lat: Number(result.data.cart[0].lat), lng: Number(result.data.cart[0].lng) })
         } catch (error) {
           console.log(error);
         }
@@ -58,8 +58,12 @@ function TL() {
 
         try {
           const result = await apiClient.orders.createOrder(newUser, token)
+          console.log(result);
+          
           alert("Your order has been created successfully")
           navigate("/")
+          dispatch(setCartId(result.data.result))
+
         } catch (error) {
           
         }

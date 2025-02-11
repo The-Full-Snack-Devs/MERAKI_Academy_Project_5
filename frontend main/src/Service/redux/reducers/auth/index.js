@@ -6,6 +6,8 @@ const authSlice = createSlice({
     userId: localStorage.getItem("userId") || null,
     token: localStorage.getItem("token") || null,
     isLoggedIn: localStorage.getItem("token") ? true : false,
+    Cart_id: null,
+    Role:  localStorage.getItem("Role") || null
   },
   reducers: {
     setLogin: (state, action) => {
@@ -26,10 +28,17 @@ const authSlice = createSlice({
       state.isLoggedIn = false
       localStorage.clear()
     },
+    setCartId:(state, action) => {
+      state.Cart_id = action.payload
+    },
+    setRole:(state, action) => {
+      state.Role = action.payload
+      localStorage.setItem("Role", action.payload)
+    },
   }
 });
 
-export const { setLogin, setUserId, setLogout,changeLocation} =
+export const { setLogin, setUserId, setLogout,changeLocation,setCartId, setRole} =
  authSlice.actions;
 
 export default authSlice.reducer;

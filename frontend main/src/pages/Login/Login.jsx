@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch} from "react-redux";
-import { setLogin, setUserId } from "../../Service/redux/reducers/auth";
+import { setLogin, setUserId, setRole } from "../../Service/redux/reducers/auth";
 import { apiClient } from '../../Service/api/api';
 
 
@@ -33,7 +33,10 @@ const Login = () => {
           const result = await apiClient.users.login(newlogin)
           setRes(result.data.message)
             dispatch(setLogin(result.data.token)) 
-            dispatch(setUserId(result.data.userId)) 
+            dispatch(setUserId(result.data.userId))
+            dispatch(setRole(result.data.role))
+            console.log("role",result.data.role);
+            
             navigate("/");
         } catch (error) {
           console.log(error);
