@@ -38,8 +38,8 @@ export const apiClient = {
     createOrder: async (newUser, token) => {
         return await axios.post(`/orders`, newUser, appendHeadrs(token));
       },
-      getAllOrders: async () => {
-        return await axios.get(`/orders`);
+      getAllOrders: async (token) => {
+        return await axios.get(`/orders`, appendHeadrs(token));
       },
   }
 };
