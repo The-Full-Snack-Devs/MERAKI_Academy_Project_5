@@ -1,13 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setServices } from "../../Service/redux/reducers/services";
+import { setServices,addServices } from "../../Service/redux/reducers/services";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from '../../Service/api/api';
 
 
 const Services = () => {
   const services = useSelector((redusers) => redusers.servicesReduser.services);
+  const role = useSelector((redusers) => redusers.authReducer.Role);
+  const token=useSelector((reduser)=>reduser.authReducer.token)
+
+console.log(role);
+// const [newService, setNewService] = useState()
+const [name, setName] = useState("")
+const [image, setImage] = useState("")
+const [description, setDescription] = useState("")
+const newService={name,image,description}
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -34,12 +43,41 @@ const Services = () => {
       }
 
   };
+  const addNewServices = async () => {
+    
+      try {
+        const result = await apiClient.services.addNewServices(newService,token)
+        console.log(result);
+        
+        dispatch(addServices(result.data.result));
+        getAllServices();
+        
+      } catch (error) {
+        console.log(error);
+      }
+
+  };
   useEffect(() => {
     getAllServices();
   }, []);
 
   return (
     <div>
+      {role==="Admin"&&<>
+        <button onClick={addNewServices}>add</button>
+      <input placeholder="name" value={services.name} onChange={(e)=>{
+        setName(e.target.value)
+      }}/>
+      <input placeholder="description" onChange={(e)=>{
+         setDescription(e.target.value)
+      }}/>
+      <input placeholder="image" onChange={(e)=>{
+        setImage(e.target.value)
+      }}/>
+      </>}
+      
+
+      
       {services?.map((ele, i) => (
         <div>
           <img src={ele.image} />
@@ -55,6 +93,7 @@ const Services = () => {
           
         </div>
       ))}
+      
     </div>
   );
 };

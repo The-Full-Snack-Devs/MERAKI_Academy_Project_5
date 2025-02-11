@@ -10,7 +10,10 @@ const servicesSlice = createSlice({
       console.log(action.payload);
       
     },
+    addServices: (state, action) => {
+      state.services = [...state.services, action.payload]; 
+    }
   },
 });
-export const { setServices } = servicesSlice.actions;
+export const { setServices,addServices } = servicesSlice.actions;
 export default servicesSlice.reducer;
