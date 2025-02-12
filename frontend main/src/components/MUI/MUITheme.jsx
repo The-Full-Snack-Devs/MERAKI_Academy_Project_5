@@ -19,7 +19,7 @@ export const ThemeProviderWrapper = ({ children }) => {
             main: darkMode ? '#f0592c' : '#f04f23', 
           },
           background: {
-            default: darkMode ? '#414141' : '#ffffff',  // Ensure this changes
+            default: darkMode ? '#414141' : '#ffffff',  
             paper: darkMode ? '#414141' : '#ffffff',
           },
           text: {

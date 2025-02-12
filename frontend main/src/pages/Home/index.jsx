@@ -13,6 +13,7 @@ const Home = () => {
       {/* Hero Section */}
       <Box
         sx={{
+        mt: "60px",
           position: "relative",
           width: "100%",
           height: "90vh",

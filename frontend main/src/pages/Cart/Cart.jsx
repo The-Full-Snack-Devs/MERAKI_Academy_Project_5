@@ -1,4 +1,4 @@
-import React,{ useEffect } from 'react'
+import React,{ useEffect,useState } from 'react'
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setCart } from "../../Service/redux/reducers/cart";
@@ -9,12 +9,9 @@ const Cart = () => {
   const navigate = useNavigate();
     const cart=useSelector((reduser)=>reduser.CartReduser.cart)
     const token=useSelector((reduser)=>reduser.authReducer.token)
-    console.log("1111111111111111111",token);
-    
-    const headers = {
-        Authorization: `Bearer ${token}`,
-      };
     const dispatch = useDispatch();
+
+    const [tPrice, settPrice] = useState(0)
 
 const getCartById= async ()=>{
 //     axios.get("http://localhost:5000/services/getCart", { headers })
@@ -52,8 +49,10 @@ useEffect(() => {
           <p>{ele.name}</p>
           <p>{ele.description}</p>
           <p>{ele.price}</p>
+          {settPrice(tPrice + ele.price)}
             </div>
         })}
+        <p>total price: {tPrice}</p>
         <button onClick={()=>{navigate("/TL")}}>Place order..</button>
     </div>
   )
