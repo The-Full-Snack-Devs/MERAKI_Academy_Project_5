@@ -113,6 +113,32 @@ WHERE cart.user_id = $1 AND cart.status = 'user'`
     });
 };
 
+const getCartById2=(req,res)=>{
+  const cart_id=req.params.id
+  console.log(userId);
+  const query =`SELECT * FROM cart_parts
+INNER JOIN cart ON cart_parts.cart_id = cart.idc 
+INNER JOIN parts ON cart_parts.parts_id = parts.idp
+INNER JOIN servecies ON parts.service_id = servecies.id
+INNER JOIN users ON users.id = cart.user_id
+WHERE cart.idc = 4 `
+  pool.query(query,[userId])
+  .then((result)=>{
+      res.status(200).json({
+          success: true,
+          message: `The cart with id`,
+          cart: result.rows,
+        });
+  })
+  .catch((error) => {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      err: error.message,
+    });
+  });
+};
+
 const updateServicesById = (req, res) => {
   const id = req.params.id;
   const { name, description } = req.body;

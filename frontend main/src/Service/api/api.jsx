@@ -14,7 +14,18 @@ export const apiClient = {
   part: {
     getPartByServiceId: async (id, token) => {
       return await axios.get(`/part/service/${id}`, appendHeadrs(token));
+    },getAllParts: async (token) => {
+      return await axios.get(`/part` , appendHeadrs(token));
     },
+    updatePartById: async (id, token) =>{
+      return await axios.get(`/part/${id}` , appendHeadrs(token));
+    },
+    createNewPart: async (token) => {
+      return await axios.get(`/part`, appendHeadrs(token));
+    },
+    deletePartById: async (id, token) => {
+      return await axios.get(`/part/${id}`, appendHeadrs(token));
+    }
   },
   users:{
     login: async (newlogin) => {
@@ -28,6 +39,10 @@ export const apiClient = {
     getCartById: async (token) => {
         return await axios.get(`/services/getCart`, appendHeadrs(token));
       },
+    getCartById2: async (token) => {
+        return await axios.get(`/services/getCart2`, appendHeadrs(token));
+      }
+
   },
   services:{
     getAllServices: async () => {

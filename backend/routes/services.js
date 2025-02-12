@@ -8,6 +8,7 @@ const {
   deleteServicesById,
   updateServicesById,
   getCartById,
+  getCartById2
 } = require("../controllers/services");
 
 const authentication = require("../middlewares/authentication");
@@ -23,6 +24,7 @@ serveciesRouter.get("/all", getAllServices);
 serveciesRouter.post("/createCart", authentication, createNewCart);
 serveciesRouter.post("/addCart/:id", authentication, addToCart);
 serveciesRouter.get("/getCart", authentication, getCartById);
+serveciesRouter.get("/getCart2", authentication, getCartById);
 serveciesRouter.get("/:id", authentication, getServicesById);
 
 
