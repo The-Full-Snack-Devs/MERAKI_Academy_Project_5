@@ -1,0 +1,10 @@
+.nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none; /* Hide navigation links on small screens */
+    }
+  }
