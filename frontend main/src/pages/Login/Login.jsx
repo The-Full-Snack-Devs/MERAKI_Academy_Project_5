@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { setLogin, setUserId, setRole } from "../../Service/redux/reducers/auth";
 import { apiClient } from "../../Service/api/api";
 import { Google as GoogleIcon } from '@mui/icons-material'
-// مكونات Material UI
+
 import {
   Card,
   Box,
@@ -51,7 +51,7 @@ const Login = () => {
           p: 2,
         }}
       >
-        <Card  sx={{ p: 4, width: "100%", maxWidth: 500 ,border:1 ,borderColor: "#f04f23" }}>
+        <Card  sx={{ p: 4, width: "100%", maxWidth: 500 ,boxShadow:5}}>
           <Typography variant="h4" component="h1" gutterBottom>
             Welcome to Mech2U
           </Typography>
