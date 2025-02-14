@@ -67,5 +67,9 @@ export const apiClient = {
       getAllOrders: async (token) => {
         return await axios.get(`/orders`, appendHeadrs(token));
       },
-  }
+  },
+  profile:{
+    GetProfile:async (token)=>{
+    return await axios.get(`/users/profile`,appendHeadrs(token))
+  }}
 };
