@@ -53,10 +53,10 @@ const newService={name,image,description}
     
     try {
       const result = await apiClient.services.update(id,servicesAfterUpdatte,token)
-      console.log(result);
+      console.log(result.data.Servecies);
       
       dispatch(updateServices(result.data.Servecies));
-      getAllServices();
+      // getAllServices();
       
     } catch (error) {
       console.log(error);

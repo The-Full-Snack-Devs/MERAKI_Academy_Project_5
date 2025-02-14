@@ -14,7 +14,8 @@ const servicesSlice = createSlice({
       state.services = [...state.services, action.payload]; 
     },
     updateServices: (state, action) => {
-      const newValue = action.payload;
+      const newValue = action.payload[0];
+      
       state.services = state.services.map((o) => {
         if (newValue.id === o.id) {
          return {

@@ -5,6 +5,7 @@ import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/
 const libraries = ["places"];
 import { apiClient } from '../../Service/api/api';
 
+
 function Register() {
   const [newUser, setnewUser] = useState({});
   const [Res, setRes] = useState("");
@@ -20,17 +21,7 @@ function Register() {
 
 
   const CreateUser = async () => {
-    // axios
-    //   .post("http://localhost:5000/users/register", newUser)
-    //   .then((rese) => {
-    //     setRes(rese.data.message);
-    //     setShow(true);
-    //   })
-    //   .catch((err) => {
-    //     setRes(err.response.data.message);
-    //     setShow(true);
-    //   });
-
+    
     try {
       const result = await apiClient.users.register(newUser)
       console.log(result);

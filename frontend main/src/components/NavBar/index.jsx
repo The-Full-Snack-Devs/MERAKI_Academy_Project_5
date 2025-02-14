@@ -31,7 +31,7 @@ const Navbar = () => {
         {isLoggedIn ? (
           <>
         {role === "admin" && (
-          <Button  variant="outlined" color="primary" onClick={"/orders"}>Orders</Button>
+          <Button  variant="outlined" color="primary" onClick={()=>navigate("/orders")}>Orders</Button>
         )}
           <Button  variant="outlined" color="primary" onClick={() => navigate("/HIW")}>How It Works</Button>
           <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}> Our Services </Button>
