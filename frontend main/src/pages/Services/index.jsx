@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { setServices, addServices, updateServices, deleteServices } from "../../Service/redux/reducers/services";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from '../../Service/api/api';
-
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 // Material UI Components
 import { Button, TextField, Card, CardContent, CardMedia, Grid, Typography, Container, Modal, Box } from "@mui/material";
-
+import axios from "axios"
 const Services = () => {
   const services = useSelector((redusers) => redusers.servicesReduser.services);
   const role = useSelector((redusers) => redusers.authReducer.Role);
@@ -23,6 +23,17 @@ const Services = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const uploadHandler = (x) => {
+    console.log(x);
+    
+    const data = new FormData();
+    data.append("file", x);
+    data.append("upload_preset", "123abc");
+
+    axios.post("https://api.cloudinary.com/v1_1/duxfa6nqg/upload", data)
+      .then((rese) => setImage(rese.data.url) )
+      .catch((err) => console.log(err.response?.data));
+  };
 
   const getAllServices = async () => {
     try {
@@ -127,13 +138,10 @@ const Services = () => {
             onChange={(e) => setDescription(e.target.value)}
             sx={{ marginBottom: 2 }}
           />
-          <TextField
-            fullWidth
-            label="Image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
+          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
+            Upload Image
+            <input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} />
+          </Button>
           <Button
             variant="contained"
             color="primary"
