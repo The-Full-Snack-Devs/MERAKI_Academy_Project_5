@@ -101,11 +101,11 @@ const updatePartById = (req, res) => {
   const query = `UPDATE parts 
   SET title = COALESCE($1,title), 
   price = COALESCE($2, price), 
-  service_id($3, service_id) 
+  service_id = COALESCE($3, service_id) 
   WHERE id=$4 AND is_deleted = 0  
   RETURNING *;`;
 
-  const data = [title || null, price || null, service_id || null];
+  const data = [title || null, price || null, service_id || null, id];
   pool
     .query(query, data)
     .then((result) => {

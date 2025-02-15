@@ -1,146 +1,242 @@
-import React, { useEffect,useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setServices,addServices,updateServices,deleteServices } from "../../Service/redux/reducers/services";
+import { setServices, addServices, updateServices, deleteServices } from "../../Service/redux/reducers/services";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from '../../Service/api/api';
 
+// Material UI Components
+import { Button, TextField, Card, CardContent, CardMedia, Grid, Typography, Container, Modal, Box } from "@mui/material";
 
 const Services = () => {
   const services = useSelector((redusers) => redusers.servicesReduser.services);
   const role = useSelector((redusers) => redusers.authReducer.Role);
-  const token=useSelector((reduser)=>reduser.authReducer.token)
+  const token = useSelector((reduser) => reduser.authReducer.token);
 
-console.log(role);
-const [name, setName] = useState("")
-const [image, setImage] = useState("")
-const [description, setDescription] = useState("")
-const newService={name,image,description}
-  
-  const [openUpdate, setOpenUpdate] = useState(false)
-  const servicesAfterUpdatte={name,description}
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
+  const newService = { name, image, description };
+
+  const [openUpdateModal, setOpenUpdateModal] = useState(false); // State for Update Modal
+  const [selectedService, setSelectedService] = useState(null); // State to store the selected service for update
+  const [openAddModal, setOpenAddModal] = useState(false); // State for Add Modal
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getAllServices = async () => {
-   
-
-      try {
-        const result = await apiClient.services.getAllServices()
-        dispatch(setServices(result.data.servecies));
-      } catch (error) {
-        console.log(error);
-      }
-
-  };
-  const addNewServices = async () => {
-    
-      try {
-        const result = await apiClient.services.addNewServices(newService,token)
-        console.log(result);
-        
-        dispatch(addServices(result.data.result));
-        getAllServices();
-        
-      } catch (error) {
-        console.log(error);
-      }
-
-  };
-  const updateServicesById = async (id) => {
-    console.log("idddddd:",id);
-    
     try {
-      const result = await apiClient.services.update(id,servicesAfterUpdatte,token)
-      console.log(result);
-      
-      dispatch(updateServices(result.data.Servecies));
-      getAllServices();
-      
+      const result = await apiClient.services.getAllServices();
+      dispatch(setServices(result.data.servecies));
     } catch (error) {
       console.log(error);
     }
+  };
 
-};
-const deleteServicesById =async (id)=>{
-  try {
-    const result = await apiClient.services.delete(id,token)
-    console.log(result);
-    
-    dispatch(deleteServices(id));
-    // getAllServices();
-    
-  } catch (error) {
-    console.log(error);
-  }
+  const addNewServices = async () => {
+    try {
+      const result = await apiClient.services.addNewServices(newService, token);
+      dispatch(addServices(result.data.result));
+      getAllServices();
+      setOpenAddModal(false); // Close modal after adding
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-}
+  const updateServicesById = async (id) => {
+    try {
+      const result = await apiClient.services.update(id, { name, description }, token);
+      dispatch(updateServices(result.data.Servecies));
+      setOpenUpdateModal(false); // Close modal after updating
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteServicesById = async (id) => {
+    try {
+      const result = await apiClient.services.delete(id, token);
+      dispatch(deleteServices(id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getAllServices();
   }, []);
 
+  // Style for the Modal
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 2,
+  };
+  const cardStyle = {
+    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+    boxShadow:5,
+    "&:hover": {
+      transform: "scale(1.05)", // Slightly scale up the card
+      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)", // Add a shadow
+    },
+  };
+
   return (
-    <div>
-      {role==="admin"&&<>
-        <button onClick={addNewServices}>add</button>
-      <input placeholder="name" value={services.name} onChange={(e)=>{
-        setName(e.target.value)
-      }}/>
-      <input placeholder="description" onChange={(e)=>{
-         setDescription(e.target.value)
-      }}/>
-      <input placeholder="image" onChange={(e)=>{
-        setImage(e.target.value)
-      }}/>
-      </>}
+    <Container sx={{mt:8}}>
       
+      {role === "admin" && (
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => setOpenAddModal(true)}
+          sx={{ marginBottom: 4 }}
+        >
+          Add Service
+        </Button>
+      )}
 
-      
-      {services?.map((ele, i) => (
-        <div>
-          <img src={ele.image} />
-          <p>{ele.name}</p>
-          <p>{ele.description}</p>
-          <button id={ele.id} 
-          onClick={(e)=>navigate(`/DServices/${e.target.id}`)
-        }
+      {/* Add Service Modal */}
+      <Modal
+        open={openAddModal}
+        onClose={() => setOpenAddModal(false)}
+        aria-labelledby="add-service-modal"
+        aria-describedby="add-service-form"
+      >
+        <Box sx={modalStyle}>
+          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+            Add New Service
+          </Typography>
+          <TextField
+            fullWidth
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            fullWidth
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            fullWidth
+            label="Image URL"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={addNewServices}
           >
-            details
-            {/* on click send the id whith navigate to component details*/}
-          </button>
+            Save
+          </Button>
+        </Box>
+      </Modal>
 
-          {/* update  */}
-          {role==="admin"&&<>
-            {openUpdate !== ele.id && (
-      <button onClick={() => setOpenUpdate(ele.id)}>update</button>
-    )}
-          
-          {openUpdate === ele.id && (
-      <>
-<input placeholder="name" value={services.name} onChange={(e)=>{
-        setName(e.target.value)
-      }}/>  
-            <input placeholder="description" onChange={(e) => setDescription(e.target.value)} />
-        <button onClick={() => {
-          setOpenUpdate(null)
-          updateServicesById(ele.id)
-          }}>save Update</button>
-      </>
-    )}
-          </>}
-{role==="admin"&&<>
-  <button onClick={()=>{
-          deleteServicesById(ele.id)
-         }}>delete</button>
+      {/* Update Service Modal */}
+      <Modal
+        open={openUpdateModal}
+        onClose={() => setOpenUpdateModal(false)}
+        aria-labelledby="update-service-modal"
+        aria-describedby="update-service-form"
+      >
+        <Box sx={modalStyle}>
+          <Typography variant="h6" sx={{ marginBottom: 2 }}>
+            Update Service
+          </Typography>
+          <TextField
+            fullWidth
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            fullWidth
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => updateServicesById(selectedService.id)}
+          >
+            Save Update
+          </Button>
+        </Box>
+      </Modal>
 
-</>}
-        
-        </div>
-      ))}
-      
-    </div>
+      <Grid container spacing={3}>
+        {services?.map((ele, i) => (
+          <Grid item xs={12} sm={6} md={4} key={ele.id}>
+            <Card sx={cardStyle}>
+              <CardMedia
+                component="img"
+                height="140"
+                image={ele.image}
+                alt={ele.name}
+              />
+              <CardContent>
+                <Typography variant="h5" component="div">
+                  {ele.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {ele.description}
+                </Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  sx={{ marginTop: 2, marginRight: 1 }}
+                  onClick={() => navigate(`/DServices/${ele.id}`)}
+                >
+                  Details
+                </Button>
+
+                {role === "admin" && (
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      sx={{ marginTop: 2, marginRight: 1 }}
+                      onClick={() => {
+                        setSelectedService(ele); // Set the selected service
+                        setName(ele.name); // Pre-fill the name
+                        setDescription(ele.description); // Pre-fill the description
+                        setOpenUpdateModal(true); // Open the update modal
+                      }}
+                    >
+                      Update
+                    </Button>
+
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      sx={{ marginTop: 2 }}
+                      onClick={() => deleteServicesById(ele.id)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
 };
 

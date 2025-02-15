@@ -9,6 +9,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { setLogout } from "../../Service/redux/reducers/auth"
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
 
 const Navbar = () => {
@@ -31,18 +32,15 @@ const Navbar = () => {
         {isLoggedIn ? (
           <>
         {role === "admin" && (
-          <Button  variant="outlined" color="primary" onClick={"/orders"}>Orders</Button>
+          <Button  fontWeight="bold" variant="outlined" color="primary" onClick={()=>navigate("/orders")}><strong>Orders</strong> </Button>
         )}
-          <Button  variant="outlined" color="primary" onClick={() => navigate("/HIW")}>How It Works</Button>
-          <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}> Our Services </Button>
-          <Button  variant="outlined" color="primary" onClick={()=>{dispatch(setLogout())}}>Log Out</Button>
+          <Button  fontWeight="bold" variant="outlined" color="primary" onClick={() => navigate("/HIW")}><strong>How It Works</strong> </Button>
+          <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}><strong>Our Services</strong> </Button>
           </>
           ) : (
             <>
-          <Button  variant="outlined" color="primary" onClick={() => navigate("/HIW")}>How It Works</Button>
-          <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}> Our Services </Button>
-          <Button  variant="outlined" color="primary" onClick={() => navigate("/login")}> Log In </Button>
-            
+          <Button  fontWeight="bold" variant="outlined" color="primary" onClick={() => navigate("/HIW")}><strong>How It Works</strong></Button>
+          <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}> <strong>Our Services</strong> </Button>
             </>
              )}
         </div>
@@ -50,15 +48,19 @@ const Navbar = () => {
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
           {isLoggedIn ? (
           <>
-          <IconButton color="primary" aria-label="shopping cart" onClick={() => navigate("/cart")}> <ShoppingCartOutlinedIcon /> </IconButton>
-          <Button  variant="outlined" color="primary" onClick={()=>{dispatch(setLogout())}}>Log Out</Button>
+          <IconButton color="primary" aria-label="shopping cart" onClick={() => navigate("/profile")}> <AccountCircleRoundedIcon/></IconButton>
+          <IconButton color="primary" aria-label="profile" onClick={() => navigate("/cart")}> <ShoppingCartOutlinedIcon /> </IconButton>
+          <Button  variant="outlined" color="primary" onClick={()=>{
+            navigate("/")
+            dispatch(setLogout())
+            }}><strong>Log Out</strong> </Button>
           <IconButton onClick={() => setDarkMode(!darkMode)} color="inherit">
             {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
           </>
           ) : (
             <>
-          <Button  variant="outlined" color="primary" onClick={() => navigate("/login")}> Log In </Button>
+          <Button  variant="outlined" color="primary" onClick={() => navigate("/login")}>  <strong>Log In</strong> </Button>
           <IconButton onClick={() => setDarkMode(!darkMode)} color="inherit">
             {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>

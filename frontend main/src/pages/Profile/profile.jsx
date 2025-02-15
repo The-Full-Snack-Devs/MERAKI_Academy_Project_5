@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { apiClient } from '../../Service/api/api';
 import { setProfile , setOrders } from '../../Service/redux/reducers/Profile';
-
 import { Container, Card, CardContent, Avatar, Typography, Box ,Button } from "@mui/material";
-
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,7 +12,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {  TextField } from "@mui/material";
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -24,7 +21,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -37,10 +33,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Profile = () => {
   const profile = useSelector((state) => state.profileReduser.profile);
   const orders = useSelector((state) => state.profileReduser.orders);
-
   const token = useSelector((state) => state.authReducer.token);
   const dispatch = useDispatch();
-
   const getProfileById = async () => {
     try {
       const result = await apiClient.profile.GetProfile(token);
@@ -54,7 +48,6 @@ const Profile = () => {
       const result = await apiClient.profile.getOrderById(token);
       dispatch(setOrders(result.data.result));
       console.log("orders",result);
-      
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -63,10 +56,8 @@ const Profile = () => {
     getProfileById();
     getOrdersById();
   }, []);
-
   return (
     <Container sx={{ marginTop: 10, paddingBottom: 5 }}>
-     
       <Card
         sx={{
           maxWidth: 500,
@@ -90,15 +81,12 @@ const Profile = () => {
               borderColor: 'primary.main',
             }}
           />
-
           <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
             {profile.firstname} {profile.lastname}
           </Typography>
-
           <Typography variant="body1" color="text.secondary" sx={{ marginBottom: 2 }}>
             {profile.email}
           </Typography>
-
           <Typography variant="body1" sx={{ marginBottom: 3 }}>
             Phone: {profile.phone}
           </Typography>
@@ -107,8 +95,6 @@ const Profile = () => {
       <Typography variant="h3" color="dark">
                   YOUR ORDERS :
                   </Typography>
-
-      
       <TableContainer component={Paper} sx={{ marginTop: 7, boxShadow: 8, borderRadius: 4 }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -117,8 +103,6 @@ const Profile = () => {
               <StyledTableCell align="right">Created at</StyledTableCell>
               <StyledTableCell align="right">Name</StyledTableCell>
               <StyledTableCell align="right">Status</StyledTableCell>
-              
-
             </TableRow>
           </TableHead>
           <TableBody>
@@ -163,5 +147,4 @@ const Profile = () => {
     </Container>
   );
 };
-
 export default Profile;
