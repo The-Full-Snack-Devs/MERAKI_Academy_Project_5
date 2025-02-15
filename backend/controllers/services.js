@@ -89,7 +89,8 @@ const addToCart = (req,res)=>{
 
 const getCartById=(req,res)=>{
     const userId=req.token.userId
-    console.log(userId);
+    console.log(1);
+    
     const query =`SELECT * FROM cart_parts
 INNER JOIN cart ON cart_parts.cart_id = cart.idc 
 INNER JOIN parts ON cart_parts.parts_id = parts.idp
@@ -114,15 +115,15 @@ WHERE cart.user_id = $1 AND cart.status = 'user'`
 };
 
 const getCartById2=(req,res)=>{
-  const cart_id=req.params.id
-  console.log(userId);
+  console.log(2);
+  const cart_id = req.params.id
   const query =`SELECT * FROM cart_parts
 INNER JOIN cart ON cart_parts.cart_id = cart.idc 
 INNER JOIN parts ON cart_parts.parts_id = parts.idp
 INNER JOIN servecies ON parts.service_id = servecies.id
 INNER JOIN users ON users.id = cart.user_id
-WHERE cart.idc = 4 `
-  pool.query(query,[userId])
+WHERE cart.idc = $1`
+  pool.query(query,[cart_id])
   .then((result)=>{
       res.status(200).json({
           success: true,
@@ -215,6 +216,7 @@ module.exports = {
   createNewCart,
   addToCart,
   getCartById,
+  getCartById2,
   createNewServices,
   deleteServicesById,
   updateServicesById,
