@@ -3,9 +3,7 @@ const {pool} = require("../models/db");
 const authorization = (string) => {
   return function (req, res, next) {
     const role_id = req.token.role;
-    const data = [string, role_id];
-    console.log(data);
-    
+    const data = [string, role_id];    
     const query = `SELECT * FROM users WHERE role = $1 AND role = $2`;
     pool
       .query(query, data)

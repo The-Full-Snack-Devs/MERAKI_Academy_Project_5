@@ -16,7 +16,7 @@ const authorization = require("../middlewares/authorization");
 router.post("/",authentication, createNewOrder)
 router.get("/",authentication,authorization("admin"), getAllOrders);
 router.get("/:id", getOrderById);
-router.put("/:id", updateOrderById);
+router.put("/:id",authentication,authorization("admin"), updateOrderById);
 router.delete("/:id", deleteOrderById);
 
 module.exports = router;
