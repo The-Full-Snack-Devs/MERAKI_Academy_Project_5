@@ -31,16 +31,21 @@ const Navbar = () => {
         {isLoggedIn ? (
           <>
         {role === "admin" && (
-          <Button  variant="outlined" color="primary" onClick={"/orders"}>Orders</Button>
+          <Button  variant="outlined" color="primary" onClick={()=>navigate("/orders")}>Orders</Button>
         )}
           <Button  variant="outlined" color="primary" onClick={() => navigate("/HIW")}>How It Works</Button>
           <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}> Our Services </Button>
-          <Button  variant="outlined" color="primary" onClick={()=>{dispatch(setLogout())}}>Log Out</Button>
+          <Button  variant="outlined" color="primary" onClick={() => navigate("/profile")}>Profile</Button>
+          <Button  variant="outlined" color="primary" onClick={()=>{
+            navigate("/")
+            dispatch(setLogout())}}>Log Out</Button>
           </>
           ) : (
             <>
           <Button  variant="outlined" color="primary" onClick={() => navigate("/HIW")}>How It Works</Button>
           <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}> Our Services </Button>
+          <Button  variant="outlined" color="primary" onClick={() => navigate("/profile")}>Profile</Button>
+
           <Button  variant="outlined" color="primary" onClick={() => navigate("/login")}> Log In </Button>
             
             </>
