@@ -74,4 +74,5 @@ export const apiClient = {
   profile:{
       GetProfile:async (token)=>{
         return await axios.get(`/users/profile`,appendHeadrs(token))
-  }}
+  }},
+}

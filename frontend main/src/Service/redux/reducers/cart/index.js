@@ -8,7 +8,6 @@ const cartSlice = createSlice({
     setCart: (state, action) => {
       state.cart = action.payload;
       console.log(action.payload);
-      
     },
   },
 });
