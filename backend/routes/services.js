@@ -23,8 +23,8 @@ serveciesRouter.put("/:id", authentication, updateServicesById);
 serveciesRouter.get("/all", getAllServices);
 serveciesRouter.post("/createCart", authentication, createNewCart);
 serveciesRouter.post("/addCart/:id", authentication, addToCart);
+serveciesRouter.get("/getCartById2/:id", authentication, getCartById2);
 serveciesRouter.get("/getCart", authentication, getCartById);
-serveciesRouter.get("/getCart2", authentication, getCartById);
 serveciesRouter.get("/:id", authentication, getServicesById);
 
 
