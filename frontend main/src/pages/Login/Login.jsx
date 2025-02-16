@@ -4,6 +4,10 @@ import { useDispatch } from "react-redux";
 import { setLogin, setUserId, setRole } from "../../Service/redux/reducers/auth";
 import { apiClient } from "../../Service/api/api";
 import { Google as GoogleIcon } from '@mui/icons-material'
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios"
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 import {
   Card,
@@ -86,14 +90,23 @@ const Login = () => {
             <Button onClick={handleLogin} type="submit" variant="outlined" fullWidth>
               Log in
             </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign in with Google
-            </Button>
+            < GoogleLogin  shape= "rectangular"  onSuccess={(response)=>{
+            console.log(jwtDecode(response.credential));
+            const data=jwtDecode(response.credential)
+            axios.post("http://localhost:5000/google/",data)
+            .then((result)=>{
+              console.log(result);
+              setRes(result.data.message);
+              dispatch(setLogin(result.data.token));
+              dispatch(setUserId(result.data.userId));
+              dispatch(setRole(result.data.role));
+              // console.log("role", result.data.role);
+              navigate("/");
+              
+            })
+            .catch((err)=>{console.log(err);
+            })
+            }} onError={()=>console.log("failed")}/>
           </Box>
           {res && (
             <Typography color="error" sx={{ mt: 2 }}>
