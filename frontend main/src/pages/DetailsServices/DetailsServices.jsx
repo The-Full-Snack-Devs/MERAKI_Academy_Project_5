@@ -1,9 +1,11 @@
-import React ,{ useEffect }from 'react'
+import React ,{ useEffect, useState }from 'react'
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setDetailsServices } from '../../Service/redux/reducers/DetailsServices';
 import { useParams } from "react-router-dom";
 import { apiClient } from '../../Service/api/api';
+import { setCartId } from "../../Service/redux/reducers/auth";
+
 
 
 
@@ -11,9 +13,7 @@ const DetailsServices = () => {
     const { id } = useParams();
     const detailsServices =useSelector((redusers)=>redusers.DetailsServicesReduser.detailsServices)
     const dispatch=useDispatch()
-    const cart_id =useSelector((redusers)=>redusers.authReducer.Cart_id)
-console.log(cart_id);
-
+    const cart_id = useSelector((redusers)=>redusers.authReducer.Cart_id)
     const token=useSelector((reduser)=>reduser.authReducer.token)
 
     const headers = {
@@ -38,6 +38,17 @@ console.log(cart_id);
           }
     }
 
+    const profile=async ()=>{
+      console.log("test");
+      
+      try {
+        const result = await apiClient.profile.GetProfile(token)
+           dispatch(setCartId(result.data.User.idc))
+      } catch (error) {
+        console.log(error);
+      }
+  }
+
     const addPartToCart=(id)=>{
       axios.post(`http://localhost:5000/services/addCart/${id}`,{cart_id}, {headers})
       .then((result)=>{
@@ -51,6 +62,7 @@ console.log(cart_id);
 
     useEffect(() => {
       getServicesDetails();
+      profile()
     }, []);
 
   return (

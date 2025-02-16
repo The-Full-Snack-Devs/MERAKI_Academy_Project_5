@@ -1,61 +1,115 @@
-import React,{ useEffect,useState } from 'react'
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { setCart } from "../../Service/redux/reducers/cart";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { apiClient } from '../../Service/api/api';
+import { apiClient } from "../../Service/api/api";
+import { 
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
+  Paper, Typography, Button, Box 
+} from "@mui/material";
 
 const Cart = () => {
   const navigate = useNavigate();
-    const cart=useSelector((reduser)=>reduser.CartReduser.cart)
-    const token=useSelector((reduser)=>reduser.authReducer.token)
-    const dispatch = useDispatch();
+  const [cart, setCart] = useState([]);
+  const token = useSelector((state) => state.authReducer.token);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-    const [tPrice, settPrice] = useState(0)
+  const getCartById = async () => {
+    try {
+      const result = await apiClient.cart.getCartById(token);
+      setCart(result.data.cart);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-const getCartById= async ()=>{
-//     axios.get("http://localhost:5000/services/getCart", { headers })
-//     .then((result)=>{
-//         console.log(11);
-//         console.log("jjjjjjjjjjj:",cart);
-        
-//         console.log(result.data.cart);
-//         dispatch(setCart(result.data.cart));
+  const removeFromCart = async (id) => {
+    try {
+      const result = await apiClient.cart.removeFromCart(id, token);
+      alert("Item Removed Successfully!!");
+      navigate("/cart")
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
-//     })
-//     .catch((error)=>{
-// console.log(error);
-
-//     })
-
-try {
-  const result = await apiClient.cart.getCartById(token)
-  dispatch(setCart(result.data.cart));
-} catch (error) {
-  console.log(error);
-}
-
-}
-useEffect(() => {
+  useEffect(() => {
     getCartById();
   }, []);
 
-  return (
-    <div>
-        {cart?.map((ele,ind)=>{
-            return <div>
-                 <img src={ele.image} />
-          <p>{ele.name}</p>
-          <p>{ele.description}</p>
-          <p>{ele.price}</p>
-          {settPrice(tPrice + ele.price)}
-            </div>
-        })}
-        <p>total price: {tPrice}</p>
-        <button onClick={()=>{navigate("/TL")}}>Place order..</button>
-    </div>
-  )
-}
+  useEffect(() => {
+    const total = cart.reduce((start, e) => {      
+      return start + Number(e.price)
+    }, 0);
+    setTotalPrice(total);
+        
+  }, [cart]);
 
-export default Cart
+  return (
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" fontWeight="bold" textAlign="center" mb={3}>
+        Your Cart
+      </Typography>
+
+      <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
+        <Table>
+          
+          <TableHead>
+            <TableRow sx={{ backgroundColor: "#f04f23" }}>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Image</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Name</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Description</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Price</TableCell>
+            </TableRow>
+          </TableHead>
+
+          
+          <TableBody>
+            {cart?.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <img src={item.image} alt={item.name} style={{ width: 80, height: 50, borderRadius: 5 }} />
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">{item.name}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body2" color="text.secondary">{item.description}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6" color="primary">${item.price}</Typography>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      
+      {cart.length > 0 && (
+        <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="h5" fontWeight="bold">
+            Total Price: ${totalPrice}
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{
+              mt: 3,
+              backgroundColor: "#f04f23",
+              "&:hover": { backgroundColor: "#d9441d" },
+              fontSize: "16px",
+              px: 4,
+              py: 1.5,
+              borderRadius: 2,
+            }}
+            onClick={() => navigate("/checkout")}
+          >
+            Place Order
+          </Button>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default Cart;

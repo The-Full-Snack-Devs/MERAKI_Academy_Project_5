@@ -10,7 +10,7 @@ import Login from "../pages/Login/Login"
 import HowItWork from "../pages/howItWork/howItWork.jsx"
 import Order from "../pages/Order/Order.jsx";
 import PartDash from "../pages/PartDash/PartDash.jsx"
-import Profile from "../pages/Profile/profile.jsx";
+// import Profile from "../pages/Profile/profile.jsx";
 
 export const router = createBrowserRouter([
 {
@@ -48,10 +48,11 @@ export const router = createBrowserRouter([
         },{
             path: "part",
             element: <PartDash/>,
-        },{
-            path: "profile",
-            element: <Profile/>,
-        }
+        },
+        // {
+        //     path: "profile",
+        //     element: <Profile/>,
+        // }
     ]
 }
 ])

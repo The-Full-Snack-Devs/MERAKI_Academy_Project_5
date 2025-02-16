@@ -30,6 +30,7 @@ const authSlice = createSlice({
     },
     setCartId:(state, action) => {
       state.Cart_id = action.payload
+      localStorage.setItem("cart", action.payload)
     },
     setRole:(state, action) => {
       state.Role = action.payload
