@@ -152,11 +152,33 @@ const deleteOrderById = (req, res) => {
       });
     });
 };
+const getAllOrdersById = (req, res) => {
+  const userId = req.token.userId
 
+  const query = `SELECT * FROM orders
+INNER JOIN users ON users.id = orders.user_id
+WHERE orders.is_deleted=0 and orders.user_id=$1 `;
+  pool.query(query,[userId])
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "All the order",
+        result: result.rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
 module.exports = {
   getAllOrders,
   getOrderById,
   createNewOrder,
   updateOrderById,
   deleteOrderById,
+  getAllOrdersById
 };
