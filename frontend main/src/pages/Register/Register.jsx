@@ -6,10 +6,17 @@ import { Container, Paper, Typography, TextField, Button, Box, Modal } from "@mu
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SaveIcon from "@mui/icons-material/Save";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { setLogin, setUserId, setRole } from "../../Service/redux/reducers/auth";
+import { useNavigate } from "react-router-dom";
 
 const libraries = ["places"];
 
 function Register() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [newUser, setNewUser] = useState({});
   const [Res, setRes] = useState("");
   const [Show, setShow] = useState(false);
@@ -93,11 +100,11 @@ function Register() {
       <Typography variant="h4" component="h1" gutterBottom>
             Welcome to Mech2U
           </Typography>
-        <Typography variant="h5" align="center">Create Your Account</Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1  }}>
-         
+         <Box sx={{display: "flex" , gap: 1 }}>
           <TextField size="small" label="First Name" fullWidth onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} />
           <TextField  size="small" label="Last Name" fullWidth onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} />
+          </Box>
           <TextField  size="small" label="Phone Number" fullWidth onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} />
           <TextField  size="small" label="Email" type="email" fullWidth onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
           <TextField  size="small" label="Password" type="password" fullWidth onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
@@ -148,6 +155,23 @@ function Register() {
           </Button>
 
           <Button variant="outlined" fullWidth onClick={CreateUser}>Create Account</Button>
+          < GoogleLogin  onSuccess={(response)=>{
+            console.log(jwtDecode(response.credential));
+            const data=jwtDecode(response.credential)
+            axios.post("http://localhost:5000/google/",data)
+            .then((result)=>{
+              console.log(result);
+              setRes(result.data.message);
+              dispatch(setLogin(result.data.token));
+              dispatch(setUserId(result.data.userId));
+              dispatch(setRole(result.data.role));
+              // console.log("role", result.data.role);
+              navigate("/");
+              
+            })
+            .catch((err)=>{console.log(err);
+            })
+            }} onError={()=>console.log("failed")}/>
         </Box>
         {Show && <Typography align="center" color="primary" sx={{ mt: 2 }}>{Res}</Typography>}
       </Paper>
