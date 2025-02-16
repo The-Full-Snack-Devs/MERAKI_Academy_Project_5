@@ -161,8 +161,8 @@ function Order() {
   <Dialog 
     fullWidth 
     maxWidth="sm"
-    open={CartToggle} // Ensure it's controlled by state
-    onClose={() => setCartToggle(false)} // Close on outside click
+    open={CartToggle} 
+    onClose={() => setCartToggle(false)} 
   >
     {/* Modal Header */}
     <DialogTitle 

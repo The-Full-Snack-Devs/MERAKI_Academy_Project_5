@@ -26,7 +26,7 @@ serveciesRouter.post("/addCart/:id", authentication, addToCart);
 serveciesRouter.get("/getCartById2/:id", authentication, getCartById2);
 serveciesRouter.get("/getCart", authentication, getCartById);
 serveciesRouter.get("/:id", authentication, getServicesById);
-serveciesRouter.delete("removeFromCart/:id", authentication, removeFromCart);
+serveciesRouter.delete("/removeFromCart/:id", authentication, removeFromCart);
 serveciesRouter.delete("/:id", authentication, deleteServicesById);
 
 

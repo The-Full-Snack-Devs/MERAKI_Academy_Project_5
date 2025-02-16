@@ -4,34 +4,30 @@ import { setServices, addServices, updateServices, deleteServices } from "../../
 import { useNavigate } from "react-router-dom";
 import { apiClient } from '../../Service/api/api';
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-// Material UI Components
 import { Button, TextField, Card, CardContent, CardMedia, Grid, Typography, Container, Modal, Box } from "@mui/material";
-import axios from "axios"
+import axios from "axios";
+
 const Services = () => {
-  const services = useSelector((redusers) => redusers.servicesReduser.services);
-  const role = useSelector((redusers) => redusers.authReducer.Role);
-  const token = useSelector((reduser) => reduser.authReducer.token);
+  const services = useSelector((state) => state.servicesReduser.services);
+  const role = useSelector((state) => state.authReducer.Role);
+  const token = useSelector((state) => state.authReducer.token);
 
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
-  const newService = { name, image, description };
-
-  const [openUpdateModal, setOpenUpdateModal] = useState(false); // State for Update Modal
-  const [selectedService, setSelectedService] = useState(null); // State to store the selected service for update
-  const [openAddModal, setOpenAddModal] = useState(false); // State for Add Modal
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const uploadHandler = (x) => {
-    console.log(x);
-    
-    const data = new FormData();
-    data.append("file", x);
-    data.append("upload_preset", "123abc");
 
+  const uploadHandler = (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "123abc");
     axios.post("https://api.cloudinary.com/v1_1/duxfa6nqg/upload", data)
-      .then((rese) => setImage(rese.data.url) )
+      .then((res) => setImage(res.data.url))
       .catch((err) => console.log(err.response?.data));
   };
 
@@ -44,30 +40,31 @@ const Services = () => {
     }
   };
 
-  const addNewServices = async () => {
+  const addNewService = async () => {
     try {
+      const newService = { name, image, description };
       const result = await apiClient.services.addNewServices(newService, token);
       dispatch(addServices(result.data.result));
       getAllServices();
-      setOpenAddModal(false); // Close modal after adding
+      setOpenAddModal(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const updateServicesById = async (id) => {
+  const updateServiceById = async (id) => {
     try {
       const result = await apiClient.services.update(id, { name, description }, token);
       dispatch(updateServices(result.data.Servecies));
-      setOpenUpdateModal(false); // Close modal after updating
+      setOpenUpdateModal(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const deleteServicesById = async (id) => {
+  const deleteServiceById = async (id) => {
     try {
-      const result = await apiClient.services.delete(id, token);
+      await apiClient.services.delete(id, token);
       dispatch(deleteServices(id));
     } catch (error) {
       console.log(error);
@@ -78,7 +75,6 @@ const Services = () => {
     getAllServices();
   }, []);
 
-  // Style for the Modal
   const modalStyle = {
     position: 'absolute',
     top: '50%',
@@ -90,151 +86,72 @@ const Services = () => {
     p: 4,
     borderRadius: 2,
   };
-  const cardStyle = {
-    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-    boxShadow:5,
-    "&:hover": {
-      transform: "scale(1.05)", // Slightly scale up the card
-      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)", // Add a shadow
-    },
-  };
 
   return (
-    <Container sx={{mt:8}}>
-      
+    <>
+    <Box
+        sx={{
+        mt: "60px",
+          position: "relative",
+          width: "100%",
+          height: "50vh",
+          backgroundImage: "url('src/assets/A_modern_car_repair_garage_with_an_orange_color_th.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          px: { xs: 2, md: 10 },
+          color: "white",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+        }}
+      >
+        <Box sx={{ position: "relative", maxWidth: "600px" }}>
+          <Typography variant="h2" fontWeight="bold">
+            Our Services
+          </Typography>
+          <Typography variant="h5" sx={{ mt: 2 }}>
+            "Your Car, Our Care – Anytime, Anywhere."
+          </Typography>
+        </Box>
+      </Box>
+    <Container sx={{ mt: 4 }}>
       {role === "admin" && (
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => setOpenAddModal(true)}
-          sx={{ marginBottom: 4 }}
-        >
+        <Button variant="contained" color="primary" onClick={() => setOpenAddModal(true)} sx={{ mb: 4 }}>
           Add Service
         </Button>
       )}
 
-      {/* Add Service Modal */}
-      <Modal
-        open={openAddModal}
-        onClose={() => setOpenAddModal(false)}
-        aria-labelledby="add-service-modal"
-        aria-describedby="add-service-form"
-      >
-        <Box sx={modalStyle}>
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            Add New Service
-          </Typography>
-          <TextField
-            fullWidth
-            label="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            fullWidth
-            label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
-            Upload Image
-            <input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} />
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={addNewServices}
-          >
-            Save
-          </Button>
-        </Box>
-      </Modal>
-
-      {/* Update Service Modal */}
-      <Modal
-        open={openUpdateModal}
-        onClose={() => setOpenUpdateModal(false)}
-        aria-labelledby="update-service-modal"
-        aria-describedby="update-service-form"
-      >
-        <Box sx={modalStyle}>
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            Update Service
-          </Typography>
-          <TextField
-            fullWidth
-            label="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            fullWidth
-            label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => updateServicesById(selectedService.id)}
-          >
-            Save Update
-          </Button>
-        </Box>
-      </Modal>
-
-      <Grid container spacing={3}>
-        {services?.map((ele, i) => (
-          <Grid item xs={12} sm={6} md={4} key={ele.id}>
-            <Card sx={cardStyle}>
-              <CardMedia
-                component="img"
-                height="140"
-                image={ele.image}
-                alt={ele.name}
-              />
+      <Grid container spacing={3} sx={{mb: 5}}>
+        {services?.map((service) => (
+          <Grid item xs={12} sm={6} md={4} key={service.id}>
+            <Card sx={{ boxShadow: 5, transition: "0.3s", '&:hover': { transform: "scale(1.05)" } }}>
+              <CardMedia component="img" height="200" image={service.image} alt={service.name} />
               <CardContent>
-                <Typography variant="h5" component="div">
-                  {ele.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {ele.description}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  sx={{ marginTop: 2, marginRight: 1 }}
-                  onClick={() => navigate(`/DServices/${ele.id}`)}
-                >
+                <Typography variant="h5" component="div">{service.name}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>{service.description}</Typography>
+                <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={() => navigate(`/DServices/${service.id}`)}>
                   Details
                 </Button>
-
                 {role === "admin" && (
                   <>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      sx={{ marginTop: 2, marginRight: 1 }}
-                      onClick={() => {
-                        setSelectedService(ele); // Set the selected service
-                        setName(ele.name); // Pre-fill the name
-                        setDescription(ele.description); // Pre-fill the description
-                        setOpenUpdateModal(true); // Open the update modal
-                      }}
-                    >
+                    <Button variant="outlined" color="primary" sx={{ mt: 2, ml: 1 }} onClick={() => {
+                      setSelectedService(service);
+                      setName(service.name);
+                      setDescription(service.description);
+                      setOpenUpdateModal(true);
+                    }}>
                       Update
                     </Button>
-
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      sx={{ marginTop: 2 }}
-                      onClick={() => deleteServicesById(ele.id)}
-                    >
+                    <Button variant="outlined" color="error" sx={{ mt: 2, ml: 1 }} onClick={() => deleteServiceById(service.id)}>
                       Delete
                     </Button>
                   </>
@@ -244,7 +161,29 @@ const Services = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Add Service Modal */}
+      <Modal open={openAddModal} onClose={() => setOpenAddModal(false)}>
+        <Box sx={modalStyle}>
+          <Typography variant="h6" sx={{ mb: 2 }}>Add New Service</Typography>
+          <TextField fullWidth label="Name" value={name} onChange={(e) => setName(e.target.value)} sx={{ mb: 2 }} />
+          <TextField fullWidth label="Description" value={description} onChange={(e) => setDescription(e.target.value)} sx={{ mb: 2 }} />
+          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>Upload Image<input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} /></Button>
+          <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={addNewService}>Save</Button>
+        </Box>
+      </Modal>
+
+      {/* Update Service Modal */}
+      <Modal open={openUpdateModal} onClose={() => setOpenUpdateModal(false)}>
+        <Box sx={modalStyle}>
+          <Typography variant="h6" sx={{ mb: 2 }}>Update Service</Typography>
+          <TextField fullWidth label="Name" value={name} onChange={(e) => setName(e.target.value)} sx={{ mb: 2 }} />
+          <TextField fullWidth label="Description" value={description} onChange={(e) => setDescription(e.target.value)} sx={{ mb: 2 }} />
+          <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={() => updateServiceById(selectedService.id)}>Save Update</Button>
+        </Box>
+      </Modal>
     </Container>
+    </>
   );
 };
 

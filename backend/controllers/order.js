@@ -1,8 +1,6 @@
 const {pool} = require("../models/db");
 
-const createNewOrder = (req, res) => {
-  console.log(req.body);
-  
+const createNewOrder = (req, res) => { 
   const userId = req.token.userId
   const cart = req.body.cart_id 
   const {date_time , position} = req.body
