@@ -58,19 +58,22 @@ WHERE email = $1`;
           if (err) res.json(err);
           if (response) {
             // ==============Create Cart==============
-            pool
+            if(!result.rows[0].idc){
+      pool
     .query(`INSERT INTO cart (user_id) VALUES ($1) RETURNING *`, [result.rows[0].id])
     .then((result) => {
+      console.log("cart mart",result);
+      x = result.rows[0].idc
     })
     .catch((error) => {
       console.error(error);
-    }); 
+    });
+  }
     // ===========================
             const payload = {
               userId: result.rows[0].id,
               role: result.rows[0].role,
-              cart_id: result.rows[0].idc
-
+              cart_id: result.rows[0].idc || x
             };
             console.log(payload);
             
@@ -110,7 +113,8 @@ WHERE email = $1`;
 const getProfile = (req, res) => {
   let id = req.token.userId;
   const query = `SELECT * FROM users 
-  WHERE id = $1`;
+INNER JOIN cart ON users.id = cart.user_id
+WHERE users.id = $1 AND cart.status = 'user'`;
   const data = [id];
   pool
   .query(query, data)
@@ -128,6 +132,8 @@ const getProfile = (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
+      
       res.status(500).json({
         success: false,
         message: `Server Error`,

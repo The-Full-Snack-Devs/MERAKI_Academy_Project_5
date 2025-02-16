@@ -1,8 +1,10 @@
 const {pool} = require("../models/db");
 
 const createNewOrder = (req, res) => {
+  console.log(req.body);
+  
   const userId = req.token.userId
-  const cart = req.token.cart_id 
+  const cart = req.body.cart_id 
   const {date_time , position} = req.body
   const query = `INSERT INTO orders (user_id, cart_id, date_time, location) VALUES ($1,$2,$3,$4) RETURNING *`;
   const data = [userId, cart, date_time, JSON.stringify(position)];

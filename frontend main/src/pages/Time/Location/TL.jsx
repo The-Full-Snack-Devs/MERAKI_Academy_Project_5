@@ -22,6 +22,7 @@ function TL() {
 
     const onLoad = (autoC) => setAutocomplete(autoC);
     const token=useSelector((reduser)=>reduser.authReducer.token)
+    const cart_id = useSelector((redusers)=>redusers.authReducer.Cart_id)
 
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -59,6 +60,7 @@ function TL() {
         try {
           const result = await apiClient.orders.createOrder(newUser, token)
           console.log(result);
+          log
           
           alert("Your order has been created successfully")
           navigate("/")
@@ -122,6 +124,8 @@ function TL() {
 
       useEffect(() => {
         getCartById();
+        console.log(cart_id);
+        setnewUser({...newUser, cart_id: cart_id})
       }, []);
 
   return (
