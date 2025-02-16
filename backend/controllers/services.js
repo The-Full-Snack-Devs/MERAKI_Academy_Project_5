@@ -88,9 +88,8 @@ const addToCart = (req,res)=>{
 
 const removeFromCart = (req,res)=>{ 
   parts_id = req.params.id
-  console.log(cart_id, parts_id);
     const query =`DELETE FROM cart_parts
-WHERE id = $1`
+WHERE idpc = $1`
     pool.query(query,[parts_id])
     .then((result)=>{
         res.status(201).json({

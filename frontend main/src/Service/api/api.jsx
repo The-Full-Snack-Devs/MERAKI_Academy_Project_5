@@ -40,9 +40,11 @@ export const apiClient = {
         return await axios.get(`/services/getCart`, appendHeadrs(token));
       },
     getCartById2: async (id, token) => {
-        return await axios.get(`/services//getCartById2/${id}`, appendHeadrs(token));
-      }
-
+        return await axios.get(`/services/getCartById2/${id}`, appendHeadrs(token));
+      },
+    removeFromCart: async (id, token) => {
+      return await axios.delete(`/services/removeFromCart/${id}`, appendHeadrs(token));
+    }
   },
   services:{
     getAllServices: async () => {
@@ -74,10 +76,5 @@ export const apiClient = {
   profile:{
       GetProfile:async (token)=>{
         return await axios.get(`/users/profile`,appendHeadrs(token))
-  },
-  getOrderById:async (token)=>{
-    return await axios.get(`/orders/all`,appendHeadrs(token))
-
-},
-
-}}
+  }},
+}

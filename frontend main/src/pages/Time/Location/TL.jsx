@@ -1,220 +1,169 @@
-import React from 'react'
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
 import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/api";
-const libraries = ["places"];
-import { apiClient } from '../../../Service/api/api';
+import { apiClient } from "../../../Service/api/api";
 import { useNavigate } from "react-router-dom";
-import { setCartId } from "../../../Service/redux/reducers/auth/index"
+import { setCartId } from "../../../Service/redux/reducers/auth";
+import { Card, CardContent, Typography, Button, Box, TextField } from "@mui/material";
+
+const libraries = ["places"];
 
 function TL() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const navigate = useNavigate();
-    const [map, setMap] = useState(null);
-    const [time, setTime] = useState(new Date(Date.now()).toISOString().slice(0, 16));
-    const [autocomplete, setAutocomplete] = useState(null);
-    const [position, setPosition] = useState({ lat: 31.95, lng: 35.90 }); 
-    const [userLocation, setUserLocation] = useState(null);
-    const [savedLocation, setSavedLocation] = useState(null); 
-    const [newUser, setnewUser] = useState({});
-    const dispatch = useDispatch()
+  const [map, setMap] = useState(null);
+  const [time, setTime] = useState(new Date(Date.now()).toISOString().slice(0, 16));
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [position, setPosition] = useState({ lat: 31.95, lng: 35.90 });
+  const [newUser, setNewUser] = useState({});
+  const [cart_id, setcart_id] = useState(useSelector((state) => state.authReducer.Cart_id) )
 
-    const onLoad = (autoC) => setAutocomplete(autoC);
-    const token=useSelector((reduser)=>reduser.authReducer.token)
-    const cart_id = useSelector((redusers)=>redusers.authReducer.Cart_id)
+  const token = useSelector((state) => state.authReducer.token);
 
-    const headers = {
-        Authorization: `Bearer ${token}`,
-      };
+  const headers = { Authorization: `Bearer ${token}` };
 
-    const getCartById=async ()=>{
-        // axios.get(`http://localhost:5000/users`, { headers })
-        // .then((result)=>{            
-        //     setPosition({ lat: Number(result.data.User.lat), lng: Number(result.data.User.lng) })
-        // })
-        // .catch((error)=>{
-        // console.log(error);
-        // })
-
-        try {
-          const result = await apiClient.cart.getCartById(token)
-              console.log(position);
-              console.log(result);
-              setPosition({ lat: Number(result.data.cart[0].lat), lng: Number(result.data.cart[0].lng) })
-        } catch (error) {
-          console.log(error);
-        }
+  const getCartById = async () => {
+    try {
+      const result = await apiClient.cart.getCartById(token);
+      setPosition({ lat: Number(result.data.cart[0].lat), lng: Number(result.data.cart[0].lng) });
+      setcart_id(result.data.cart[0].cart_id)
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const cretaeOrder = async () => {
-        // axios
-        //   .post("http://localhost:5000/orders", newUser, {headers})
-        //   .then((rese) => {
-            
-        //   })
-        //   .catch((err) => {
-            
-        //   });
+  const createOrder = async () => {
+    try {
+      console.log(newUser);
+      const result = await apiClient.orders.createOrder(newUser, token);
+      alert("Your order has been created successfully");
+      navigate("/");
+      dispatch(setCartId(result.data.result));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-        try {
-          const result = await apiClient.orders.createOrder(newUser, token)
-          console.log(result);
-          log
-          
-          alert("Your order has been created successfully")
-          navigate("/")
-          dispatch(setCartId(result.data.result))
+  const onPlaceChanged = () => {
+    if (autocomplete) {
+      const place = autocomplete.getPlace();
+      if (place.geometry) {
+        const location = place.geometry.location;
+        setPosition({ lat: location.lat(), lng: location.lng() });
+        map.panTo({ lat: location.lat(), lng: location.lng() });
+      }
+    }
+  };
 
-        } catch (error) {
-          
-        }
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const newLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+          setPosition(newLocation);
+          map.panTo(newLocation);
+        },
+        (error) => alert("Failed to get your location. Please enable GPS.")
+      );
+    }
+  };
 
-      };
+  const saveLocation = () => {
+    setNewUser({ ...newUser, position });
+    alert(`Location saved`);
+  };
 
-    const onPlaceChanged = () => {
-        if (autocomplete !== null) {
-          const place = autocomplete.getPlace();
-          if (place.geometry) {
-            const location = place.geometry.location;
-            const newPosition = { lat: location.lat(), lng: location.lng() };
-            setPosition(newPosition);
-            map.panTo(newPosition);
-          }
-        }
-      };
-    
-      const getUserLocation = () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const newLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              };
-              setUserLocation(newLocation);
-              setPosition(newLocation);
-              map.panTo(newLocation);
-            },
-            (error) => {
-              console.error("Error getting location:", error);
-              alert("Failed to get your location. Please enable GPS.");
-            }
-          );
-        } else {
-          alert("Geolocation is not supported by this browser.");
-        }
-      };
-    
-      
-      const onMarkerDragEnd = (event) => {
-        const newLat = event.latLng.lat();
-        const newLng = event.latLng.lng();
-        setPosition({ lat: newLat, lng: newLng });
-      };
-    
-      
-      const saveLocation = () => {
-        setSavedLocation(position); 
-        // setnewUser({...newUser, ...{position}})
-        setnewUser({...newUser, position})
-        console.log(newUser);
-        alert(`Location saved`);    
-      };
-
-      useEffect(() => {
-        getCartById();
-        console.log(cart_id);
-        setnewUser({...newUser, cart_id: cart_id})
-      }, []);
+  useEffect(() => {
+    getCartById();   
+    setNewUser({ ...newUser, cart_id });
+  }, []);
 
   return (
-    <div>
-<div>
-          <label>
-            Set Location
-          </label>
+    <Card sx={{ maxWidth: 600, mx: "auto", mt: 10, p: 2, boxShadow: 3, borderRadius: 3 }}>
+      <CardContent>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          Select Time & Location
+        </Typography>
+
+        {/* Location Section */}
+        <Box sx={{ height: "250px", width: "100%", borderRadius: 2, overflow: "hidden", mb: 2 }}>
           <LoadScript googleMapsApiKey="AIzaSyAZax694b8V03dtD6PsGZ2RbIo8Zt2r8MA" libraries={libraries}>
-      <GoogleMap
-        center={position}
-        zoom={12}
-        onLoad={(map) => setMap(map)}
-        mapContainerStyle={{ height: "25vh", width: "50%" }}
-      >
+            <GoogleMap center={position} zoom={12} onLoad={setMap} mapContainerStyle={{ height: "100%", width: "100%" }}>
+              <Autocomplete onLoad={setAutocomplete} onPlaceChanged={onPlaceChanged}>
+              <Box
+  sx={{
+    position: "absolute",
+    top: 8,
+    left: "63%",
+    transform: "translateX(-50%)",
+    width: "50%",
+    zIndex: 1000,
+  }}
+>
+  <TextField
+    placeholder="Search location..."
+    variant="outlined"
+    fullWidth
+    color="primary"
+    sx={(theme) => ({
+      bgcolor: "white",
+      borderRadius: 2,
+      boxShadow: 2,
+      input: {
+        padding: "10px",
+        color: "black", // ✅ Fixes white text issue in dark mode
+      },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "rgba(0, 0, 0, 0.2)", // Light gray border
+        },
+        "&:hover fieldset": {
+          borderColor: "#f04f23", // Primary brand color on hover
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: "#f04f23", // Primary brand color on focus
+          borderWidth: "2px",
+        },
+      },
+    })}
+  />
+</Box>
 
-        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-          <input
-            type="text"
-            placeholder="Search location..."
-            style={{
-              position: "absolute",
-              top: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "250px",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "1px solid #ccc",
-              backgroundColor: "white",
-              zIndex: 1000,
-            }}
-          />
-        </Autocomplete>
 
-        <button
-          onClick={getUserLocation}
-          style={{
-            position: "absolute",
-            bottom: "50px",
-            right: "20px",
-            padding: "10px 15px",
-            borderRadius: "5px",
-            background: "#ff6600",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-            zIndex: 1000,
-          }}
-        >
-          📍 Current Location
-        </button>
+              </Autocomplete>
+              <Marker position={position} draggable onDragEnd={(e) => setPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() })} />
+            </GoogleMap>
+          </LoadScript>
+        </Box>
 
-        <button
-          onClick={saveLocation}
-          style={{
-            position: "absolute",
-            bottom: "20px",
-            right: "20px",
-            padding: "10px 15px",
-            borderRadius: "5px",
-            background: "#28a745",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-            zIndex: 1000,
-          }}
-        >
-          Save Location
-        </button>
+        {/* Buttons */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Button variant="contained" color="secondary" onClick={getUserLocation}>
+            📍 Use Current Location
+          </Button>
+          <Button variant="contained" color="success" onClick={saveLocation}>
+            Save Location
+          </Button>
+        </Box>
 
-        <Marker
-          position={position}
-          draggable={true} 
-          onDragEnd={onMarkerDragEnd} 
+        {/* Time Selection */}
+        <TextField
+          label="Select Time"
+          type="datetime-local"
+          fullWidth
+          value={newUser.date_time || time}
+          onChange={(e) => setNewUser({ ...newUser, date_time: e.target.value })}
+          sx={{ mb: 2, cursor: 'pointer' }}
         />
-      </GoogleMap>
-    </LoadScript>
-        </div>
-        <input
-  type="datetime-local"
-  id="meeting-time"
-  name="meeting-time"
-  value={new Date(Date.now()).toISOString().slice(0, 16)}
-  min={new Date(Date.now()).toISOString().slice(0, 16)}
-  onChange={(e)=>{setnewUser({...newUser, date_time: e.target.value})}}/>
-  <button onClick={() => {cretaeOrder()}}>Confirm the order</button>
-    </div>
-  )
+
+        {/* Confirm Order */}
+        <Button fullWidth variant="contained" color="primary" onClick={createOrder}>
+          Confirm Order
+        </Button>
+      </CardContent>
+    </Card>
+  );
 }
 
-export default TL
+export default TL;
