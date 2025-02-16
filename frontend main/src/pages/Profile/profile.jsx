@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, {useState, useEffect,useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { apiClient } from '../../Service/api/api';
 import { setProfile , setOrders } from '../../Service/redux/reducers/Profile';
-import { Container, Card, CardContent, Avatar, Typography, Box ,Button } from "@mui/material";
+import { Container,Link,Dialog,DialogTitle,
+  DialogContent, IconButton,
+  DialogActions, Card, CardContent, Avatar, Typography, Box ,Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,6 +14,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {  TextField } from "@mui/material";
+import { ThemeContext } from "../../components/MUI/MUITheme";
+import CloseIcon from "@mui/icons-material/Close";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -31,6 +36,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 const Profile = () => {
+  const { darkMode } = useContext(ThemeContext);
+  const [cart, setCart] = useState([])
+  const [id, setid] = useState(null)
+  const [CartToggle, setCartToggle] = useState(false)
+
   const profile = useSelector((state) => state.profileReduser.profile);
   const orders = useSelector((state) => state.profileReduser.orders);
   const token = useSelector((state) => state.authReducer.token);
@@ -52,10 +62,22 @@ const Profile = () => {
       console.error("Error fetching profile:", error);
     }
   };
+  const getCartById= async ()=>{
+    try {
+      const result = await apiClient.cart.getCartById2(id, token)
+      setCart(result.data.cart)
+      console.log(result.data.cart);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
     getProfileById();
     getOrdersById();
   }, []);
+  useEffect(() => {
+    getCartById();
+  }, [id]);
   return (
     <Container sx={{ marginTop: 10, paddingBottom: 5 }}>
       <Card
@@ -100,8 +122,8 @@ const Profile = () => {
           <TableHead>
             <TableRow>
               <StyledTableCell>services</StyledTableCell>
-              <StyledTableCell align="right">Created at</StyledTableCell>
-              <StyledTableCell align="right">Name</StyledTableCell>
+              <StyledTableCell align="right">date+time</StyledTableCell>
+              <StyledTableCell align="right">location</StyledTableCell>
               <StyledTableCell align="right">Status</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -109,26 +131,17 @@ const Profile = () => {
             {orders?.length > 0 ? (
               orders.map((row) => (
                 <StyledTableRow key={row.ido}>
-                  <StyledTableCell component="th" scope="row">
-                    {row.namep
-                    }
+                  <StyledTableCell component="th" scope="row" onClick={()=>{
+                setid(row.cart_id)
+                setCartToggle(true)
+              }}>
+                   <Button>show</Button> 
                   </StyledTableCell>
-                  <StyledTableCell align="right">
-                    <TextField
-                      disabled
-                      type="datetime-local"
-                      defaultValue={row.created_at.substring(0, 16)}
-                      sx={{
-                        '& .MuiInputBase-root': {
-                          border: 'none',
-                          outline: 'none',
-                        },
-                      }}
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.firstname} {row.lastname}
-                  </StyledTableCell>
+                  <StyledTableCell align="right"><TextField  disabled={true} type="datetime-local" defaultValue={row.date_time} /></StyledTableCell>
+                  <StyledTableCell align="right"><Link href= {`https://maps.google.com/?q=${row.location.lat},${row.location.lng}`} underline="hover"> {'Open Location'}</Link></StyledTableCell>
+
+
+                  
                   <StyledTableCell align="right">{row.status}</StyledTableCell>
                 </StyledTableRow>
               ))
@@ -144,6 +157,59 @@ const Profile = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {CartToggle && ( 
+  <Dialog 
+    fullWidth 
+    maxWidth="sm"
+    open={CartToggle} // Ensure it's controlled by state
+    onClose={() => setCartToggle(false)} // Close on outside click
+  >
+    {/* Modal Header */}
+    <DialogTitle 
+      sx={{ 
+        display: "flex", 
+        justifyContent: "space-between", 
+        alignItems: "center", 
+        backgroundColor: darkMode ? "#414141" : "#ffffff", 
+        color: darkMode ? "#ffffff" : "#000000" 
+      }}
+    >
+      Cart Detailes..
+      <IconButton onClick={() => setCartToggle(false)} sx={{ color: darkMode ? "#ffffff" : "#000000" }}>
+        <CloseIcon />
+      </IconButton>
+    </DialogTitle>
+
+    {/* body */}
+
+    <div>
+        {cart?.map((ele,ind)=>{
+            return <div>
+                 <img src={ele.image} />
+          <p>{ele.name}</p>
+          <p>{ele.description}</p>
+          <p>{ele.price}</p>
+            </div>
+        })}
+      
+    </div>
+
+    {/* Modal Footer */}
+    <DialogActions sx={{ backgroundColor: darkMode ? "#414141" : "#ffffff" }}>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: "#f04f23",
+          color: "#ffffff",
+          "&:hover": { backgroundColor: "#d9441d" },
+        }}
+        onClick={() => setCartToggle(false)}
+      >
+        Close
+      </Button>
+    </DialogActions>
+  </Dialog>
+)}
     </Container>
   );
 };
