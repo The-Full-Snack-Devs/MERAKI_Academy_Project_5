@@ -1,9 +1,9 @@
 const {pool }= require("../models/db");
 
 const createNewPart = (req, res) => {
-  const { title, price, service_id } = req.body;
-  const query = `INSERT INTO parts (title, price, service_id) VALUES ($1, $2, $3) RETURNING *;`;
-  const data = [title, price, service_id];
+  const { namep, price, service_id, imagep } = req.body;
+  const query = `INSERT INTO parts (namep, price, service_id, imagep) VALUES ($1, $2, $3, $4) RETURNING *;`;
+  const data = [namep, price, service_id, imagep];
   pool
     .query(query, data)
     .then((result) => {
@@ -14,6 +14,8 @@ const createNewPart = (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
+      
       res.status(500).json({
         success: false,
         message: "Server error",
@@ -44,8 +46,8 @@ const getAllParts = (req, res) => {
 };
 
 const getPartById = (req, res) => {
-  const id = req.params.id;
-  const query = `SELECT * FROM parts WHERE parts.id=$1 AND parts.is_deleted=0;`;
+  const id = req.params.idp;
+  const query = `SELECT * FROM parts WHERE parts.idp=$1 AND parts.is_deleted=0;`;
   const data = [id];
 
   pool
@@ -54,7 +56,7 @@ const getPartById = (req, res) => {
       if (result.rows.length !== 0) {
         res.status(200).json({
           success: true,
-          message: `The part with id: ${id}`,
+          message: `The part with id: ${idp}`,
           result: result.rows,
         });
       } else {
@@ -95,24 +97,26 @@ const getPartsByServiceId = (req, res) => {
 };
 
 const updatePartById = (req, res) => {
-  const id = req.params.id;
-  let { title, price, service_id } = req.body;
+  const id = req.params.idp;
+  let { namep, price, service_id, imagep } = req.body;
 
   const query = `UPDATE parts 
-  SET title = COALESCE($1,title), 
+  SET namep = COALESCE($1,namep), 
   price = COALESCE($2, price), 
   service_id = COALESCE($3, service_id) 
   WHERE id=$4 AND is_deleted = 0  
   RETURNING *;`;
 
-  const data = [title || null, price || null, service_id || null, id];
+
+  const data = [namep || null, price || null, service_id || null , imagep || null];
+
   pool
     .query(query, data)
     .then((result) => {
       if (result.rows.length !== 0) {
         res.status(200).json({
           success: true,
-          message: `Part with id: ${id} updated successfully `,
+          message: `Part with id: ${idp} updated successfully `,
           result: result.rows[0],
         });
       } else {
@@ -130,8 +134,8 @@ const updatePartById = (req, res) => {
 
 
 const deletePartById = (req, res) => {
-  const id = req.params.id;
-  const query = `UPDATE parts SET is_deleted=1 WHERE id=$1;`;
+  const id = req.params.idp;
+  const query = `UPDATE parts SET is_deleted=1 WHERE idp=$1;`;
   const data = [id];
   pool
     .query(query, data)
@@ -139,7 +143,7 @@ const deletePartById = (req, res) => {
       if (result.rowCount !== 0) {
         res.status(200).json({
           success: true,
-          message: `Part with id: ${id} deleted successfully`,
+          message: `Part with id: ${idp} deleted successfully`,
         });
       } else {
         throw new Error("Error happened while deleting Part");
