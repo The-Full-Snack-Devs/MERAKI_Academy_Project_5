@@ -27,15 +27,15 @@ export const apiClient = {
     getAllParts: async () => {
       return await axios.get(`/part/`);
     },
-    updatePartById: async (idp, updatedPart) =>{
-      return await axios.put(`/part/${idp}`, updatedPart);
+    updatePartById: async (id, updatedPart) =>{
+      return await axios.put(`/part/${id}`, updatedPart);
     },
     createNewPart: async (newPart) => {
       console.log(newPart);
       return await axios.post(`/part/`, newPart);
     },
-    deletePartById: async (idp) => {
-      return await axios.delete(`/part/${idp}`);
+    deletePartById: async (id) => {
+      return await axios.delete(`/part/${id}`);
     }
   },
   users:{
