@@ -25,6 +25,7 @@ const DetailsServices = () => {
   const dispatch = useDispatch();
   const cart_id = useSelector((state) => state.authReducer.Cart_id);
   const token = useSelector((state) => state.authReducer.token);
+  const isLoggedIn = useSelector((reducers) => reducers.authReducer.isLoggedIn);
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -61,7 +62,9 @@ const DetailsServices = () => {
 
   useEffect(() => {
     getServicesDetails();
-    profile();
+    if(isLoggedIn){
+      profile();
+    }
   }, []);
 
   return (
@@ -100,11 +103,11 @@ const DetailsServices = () => {
 
       <Grid container spacing={3}>
         {detailsServices.map((part, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+          <Grid item xs={12} sm={6} md={4} key={index} mb={5}>
             <Card sx={{ boxShadow: 5, transition: "0.3s", "&:hover": { transform: "scale(1.05)" } }}>
               <CardMedia component="img" height="200" image={part.image} alt={part.name} />
               <CardContent>
-                <Typography variant="h6">{part.name}</Typography>
+                <Typography variant="h6">{part.namep}</Typography>
                 <Typography variant="body1" color="text.secondary">
                   ${part.price}
                 </Typography>
