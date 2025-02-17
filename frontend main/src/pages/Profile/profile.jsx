@@ -5,7 +5,7 @@ import { apiClient } from '../../Service/api/api';
 import { setProfile , setOrders } from '../../Service/redux/reducers/Profile';
 import { Container,Link,Dialog,DialogTitle,
   DialogContent, IconButton,
-  DialogActions, Card, CardContent, Avatar, Typography, Box ,Button } from "@mui/material";
+  DialogActions, Card, CardContent, Avatar, Typography, Box ,Button,CardMedia } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -41,6 +41,8 @@ const Profile = () => {
   const [cart, setCart] = useState([])
   const [id, setid] = useState(null)
   const [CartToggle, setCartToggle] = useState(false)
+  const [totalPrice, setTotalPrice] = useState(0);
+
 
   const profile = useSelector((state) => state.profileReduser.profile);
   const orders = useSelector((state) => state.profileReduser.orders);
@@ -79,6 +81,14 @@ const Profile = () => {
   useEffect(() => {
     getCartById();
   }, [id]);
+  useEffect(() => {
+    const total = cart.reduce((start, e) => {      
+      return start + Number(e.price)
+    }, 0);
+    setTotalPrice(total);
+        
+  }, [cart]);
+
   return (
     <Container sx={{ marginTop: 10, paddingBottom: 5 }}>
       <Card
@@ -172,7 +182,9 @@ const Profile = () => {
         justifyContent: "space-between", 
         alignItems: "center", 
         backgroundColor: darkMode ? "#414141" : "#ffffff", 
-        color: darkMode ? "#ffffff" : "#000000" 
+        color: darkMode ? "#ffffff" : "#000000" ,
+       marginBottom:2
+
       }}
     >
       Cart Detailes..
@@ -182,18 +194,37 @@ const Profile = () => {
     </DialogTitle>
 
     {/* body */}
-
-    <div>
-        {cart?.map((ele,ind)=>{
-            return <div>
-                 <img src={ele.image} />
-          <p>{ele.name}</p>
-          <p>{ele.description}</p>
-          <p>{ele.price}</p>
-            </div>
-        })}
-      
-    </div>
+{/* cart on show  */}
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
+      {cart?.map((ele, ind) => (
+        <Card key={ind} sx={{ maxWidth: 400, width: "100%", boxShadow: 3, borderRadius: 2 ,display: "flex"}}>
+          <CardMedia component="img" height="100" image={ele.image} sx={{height:"100%"}} />
+        
+          <CardContent>
+            <Typography variant="h6" component="div">
+              {ele.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {ele.description}
+            </Typography>
+            <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+              ${ele.price}
+            </Typography>
+          </CardContent>
+          
+        </Card>
+      ))}
+    </Box>
+    {/* لحساب التوتل  */}
+    {cart.length > 0 && (
+        <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="h5" fontWeight="bold">
+            Total Price: ${totalPrice}
+          </Typography>
+         
+        </Box>
+      )}
+  
 
     {/* Modal Footer */}
     <DialogActions sx={{ backgroundColor: darkMode ? "#414141" : "#ffffff" }}>
