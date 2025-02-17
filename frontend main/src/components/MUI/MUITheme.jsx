@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 export const ThemeContext = createContext();
 
 export const ThemeProviderWrapper = ({ children }) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   const theme = useMemo(
     () =>

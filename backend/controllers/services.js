@@ -61,6 +61,7 @@ const createNewCart=(req,res)=>{
 }
 
 const addToCart = (req,res)=>{ 
+  console.log(req.body, req.token);
   newId = req.body.cart_id
   cart_id = newId || req.token.cart_id   
   parts_id = req.params.id
@@ -85,11 +86,33 @@ const addToCart = (req,res)=>{
     })
 }
 
+const removeFromCart = (req,res)=>{ 
+  parts_id = req.params.id
+    const query =`DELETE FROM cart_parts
+WHERE idpc = $1`
+    pool.query(query,[parts_id])
+    .then((result)=>{
+        res.status(201).json({
+            success: true,
+            message: "added to cart successfully",
+            result: result.rows,
+          });
+
+    })
+    .catch((error)=>{
+      console.log(error);
+      
+        res.status(500).json({
+            success: false,
+            message: "Server error",
+          });
+    })
+}
+
 
 
 const getCartById=(req,res)=>{
-    const userId=req.token.userId
-    console.log(userId);
+    const userId=req.token.userId    
     const query =`SELECT * FROM cart_parts
 INNER JOIN cart ON cart_parts.cart_id = cart.idc 
 INNER JOIN parts ON cart_parts.parts_id = parts.idp
@@ -98,6 +121,8 @@ INNER JOIN users ON users.id = cart.user_id
 WHERE cart.user_id = $1 AND cart.status = 'user'`
     pool.query(query,[userId])
     .then((result)=>{
+      console.log(result.rows);
+      
         res.status(200).json({
             success: true,
             message: `The cart with id`,
@@ -114,15 +139,15 @@ WHERE cart.user_id = $1 AND cart.status = 'user'`
 };
 
 const getCartById2=(req,res)=>{
-  const cart_id=req.params.id
-  console.log(userId);
+  console.log(2);
+  const cart_id = req.params.id
   const query =`SELECT * FROM cart_parts
 INNER JOIN cart ON cart_parts.cart_id = cart.idc 
 INNER JOIN parts ON cart_parts.parts_id = parts.idp
 INNER JOIN servecies ON parts.service_id = servecies.id
 INNER JOIN users ON users.id = cart.user_id
-WHERE cart.idc = 4 `
-  pool.query(query,[userId])
+WHERE cart.idc = $1`
+  pool.query(query,[cart_id])
   .then((result)=>{
       res.status(200).json({
           success: true,
@@ -215,8 +240,9 @@ module.exports = {
   createNewCart,
   addToCart,
   getCartById,
+  getCartById2,
   createNewServices,
   deleteServicesById,
   updateServicesById,
-  getCartById
+  removeFromCart
 };

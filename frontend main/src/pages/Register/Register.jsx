@@ -1,43 +1,41 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useDispatch,useSelector } from "react-redux";
 import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/api";
+import { apiClient } from "../../Service/api/api";
+import { Container, Paper, Typography, TextField, Button, Box, Modal } from "@mui/material"; // تمت إضافة Modal
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import SaveIcon from "@mui/icons-material/Save";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { setLogin, setUserId, setRole } from "../../Service/redux/reducers/auth";
+import { useNavigate } from "react-router-dom";
+
 const libraries = ["places"];
-import { apiClient } from '../../Service/api/api';
 
 function Register() {
-  const [newUser, setnewUser] = useState({});
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [newUser, setNewUser] = useState({});
   const [Res, setRes] = useState("");
   const [Show, setShow] = useState(false);
   const [map, setMap] = useState(null);
   const [autocomplete, setAutocomplete] = useState(null);
-  const [position, setPosition] = useState({ lat: 31.95, lng: 35.90 }); 
+  const [position, setPosition] = useState({ lat: 31.95, lng: 35.9 });
   const [userLocation, setUserLocation] = useState(null);
-  const [savedLocation, setSavedLocation] = useState(null); 
+  const [savedLocation, setSavedLocation] = useState(null);
+  const [openMapModal, setOpenMapModal] = useState(false); 
+
   const onLoad = (autoC) => setAutocomplete(autoC);
-  
-
-
 
   const CreateUser = async () => {
-    // axios
-    //   .post("http://localhost:5000/users/register", newUser)
-    //   .then((rese) => {
-    //     setRes(rese.data.message);
-    //     setShow(true);
-    //   })
-    //   .catch((err) => {
-    //     setRes(err.response.data.message);
-    //     setShow(true);
-    //   });
-
     try {
-      const result = await apiClient.users.register(newUser)
-      console.log(result);
+      const result = await apiClient.users.register(newUser);
       setRes(result.data.message);
       setShow(true);
     } catch (error) {
-      setRes(error.response.data.message);
+      setRes(error.response?.data?.message || "Registration failed");
       setShow(true);
     }
   };
@@ -47,14 +45,9 @@ function Register() {
     data.append("file", x);
     data.append("upload_preset", "l2udrjei");
 
-    axios
-      .post("https://api.cloudinary.com/v1_1/dl7wtfv68/upload", data)
-      .then(function (rese) {
-        setnewUser({ ...newUser, Image: rese.data.url });
-      })
-      .catch(function (err) {
-        console.log(err.response.data);
-      });
+    axios.post("https://api.cloudinary.com/v1_1/dl7wtfv68/upload", data)
+      .then((rese) => setNewUser({ ...newUser, Image: rese.data.url }))
+      .catch((err) => console.log(err.response?.data));
   };
 
   const onPlaceChanged = () => {
@@ -81,205 +74,108 @@ function Register() {
           setPosition(newLocation);
           map.panTo(newLocation);
         },
-        (error) => {
-          console.error("Error getting location:", error);
-          alert("Failed to get your location. Please enable GPS.");
-        }
+        (error) => alert("Failed to get your location. Please enable GPS."),
       );
     } else {
       alert("Geolocation is not supported by this browser.");
     }
   };
 
-  
   const onMarkerDragEnd = (event) => {
     const newLat = event.latLng.lat();
     const newLng = event.latLng.lng();
     setPosition({ lat: newLat, lng: newLng });
   };
 
-  
   const saveLocation = () => {
-    setSavedLocation(position); 
-    setnewUser({...newUser, ...{position}})
-    alert(`Location saved`);    
+    setSavedLocation(position);
+    setNewUser({ ...newUser, position });
+    alert("Location saved");
+    setOpenMapModal(false); 
   };
 
   return (
-    <div>
-      <div>
-        <h2>
-          Create Your Account
-        </h2>
-        <div>
-          <label>
-            Image
-          </label>
-          <div>
-          <input
-            type="file"
-            onChange={(e) => {
-              uploadHandler(e.target.files[0])
-            }}
-          />
-        </div>
-        </div>
-        <div>
-          <label>
-            First Name
-          </label>
-          <input
-            type="text"
-            placeholder="Enter your first name"
-            onChange={(e) =>
-              setnewUser({ ...newUser, firstName: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label>
-            Last Name
-          </label>
-          <input
-            type="text"
-            placeholder="Enter your last name"
-            onChange={(e) =>
-              setnewUser({ ...newUser, lastName: e.target.value })
-            }
-          />
-        </div>
-
-        <div>
-          <label>
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            placeholder="0771234567"
-            pattern="[0-9]{10}"
-            onChange={(e) => setnewUser({ ...newUser, phone: e.target.value })}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label>
-            Email
-          </label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            onChange={(e) => setnewUser({ ...newUser, email: e.target.value })}
-          />
-        </div>
-
-        <div>
-          <label>
-            Password
-          </label>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            onChange={(e) =>
-              setnewUser({ ...newUser, password: e.target.value })
-            }
-          />
-        </div>
-
-        <div>
-          <label>
+    <Container maxWidth="sm" sx={{ padding: 3, mt:2  }}>
+      <Paper elevation={3} sx={{ padding: 3, mt: 5,boxShadow:5 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+            Welcome to Mech2U
+          </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1  }}>
+         <Box sx={{display: "flex" , gap: 1 }}>
+          <TextField size="small" label="First Name" fullWidth onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} />
+          <TextField  size="small" label="Last Name" fullWidth onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} />
+          </Box>
+          <TextField  size="small" label="Phone Number" fullWidth onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} />
+          <TextField  size="small" label="Email" type="email" fullWidth onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
+          <TextField  size="small" label="Password" type="password" fullWidth onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
+          
+          
+          <Button variant="outlined" color="primary" onClick={() => setOpenMapModal(true)}>
             Set Location
-          </label>
-          <LoadScript googleMapsApiKey="AIzaSyAZax694b8V03dtD6PsGZ2RbIo8Zt2r8MA" libraries={libraries}>
-      <GoogleMap
-        center={position}
-        zoom={12}
-        onLoad={(map) => setMap(map)}
-        mapContainerStyle={{ height: "25vh", width: "50%" }}
-      >
+          </Button>
 
-        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-          <input
-            type="text"
-            placeholder="Search location..."
-            style={{
-              position: "absolute",
-              top: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "250px",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "1px solid #ccc",
-              backgroundColor: "white",
-              zIndex: 1000,
-            }}
-          />
-        </Autocomplete>
+          <Modal open={openMapModal} onClose={() => setOpenMapModal(false)}>
+            <Box sx={{ 
+              position: "absolute", 
+              top: "50%", 
+              left: "50%", 
+              transform: "translate(-50%, -50%)", 
+              width: "80%", 
+              maxWidth: 600, 
+              bgcolor: "background.paper", 
+              boxShadow: 24, 
+              p: 4, 
+              borderRadius: 2 
+            }}>
+              <Typography variant="h6" sx={{ mb: 2 }}>Set Your Location</Typography>
+              <LoadScript googleMapsApiKey="AIzaSyAZax694b8V03dtD6PsGZ2RbIo8Zt2r8MA" libraries={libraries}>
+                <GoogleMap 
+                  center={position} 
+                  zoom={12} 
+                  onLoad={(map) => setMap(map)} 
+                  mapContainerStyle={{ height: "40vh", width: "100%" }}
+                >
+                  <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                    <TextField placeholder="Search location..." sx={{ width: "80%", border: 1 }} />
+                  </Autocomplete>
+                  <Button variant="contained" color="secondary" startIcon={<LocationOnIcon />} onClick={getUserLocation} sx={{ mt: 2 }}>
+                    Current Location
+                  </Button>
+                  <Button variant="contained" color="success" startIcon={<SaveIcon />} onClick={saveLocation} sx={{ mt: 2 }}>
+                    Save Location
+                  </Button>
+                  <Marker position={position} draggable={true} onDragEnd={onMarkerDragEnd} />
+                </GoogleMap>
+              </LoadScript>
+            </Box>
+          </Modal>
+          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
+            Upload Image
+            <input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} />
+          </Button>
 
-        <button
-          onClick={getUserLocation}
-          style={{
-            position: "absolute",
-            bottom: "50px",
-            right: "20px",
-            padding: "10px 15px",
-            borderRadius: "5px",
-            background: "#ff6600",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-            zIndex: 1000,
-          }}
-        >
-          📍 Current Location
-        </button>
-
-        <button
-          onClick={saveLocation}
-          style={{
-            position: "absolute",
-            bottom: "20px",
-            right: "20px",
-            padding: "10px 15px",
-            borderRadius: "5px",
-            background: "#28a745",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-            zIndex: 1000,
-          }}
-        >
-          Save Location
-        </button>
-
-        <Marker
-          position={position}
-          draggable={true} 
-          onDragEnd={onMarkerDragEnd} 
-        />
-      </GoogleMap>
-    </LoadScript>
-    
-        </div>
-        
-
-        <button
-          onClick={CreateUser}
-        >
-          Create..
-        </button>
-
-        {Show && (
-          <p
-            className={`text-center mt-4 ${
-              Res == "Account Created Successfully" ? "text-teal-600" : "text-red-500"
-            }`}
-          >
-            {Res}
-          </p>
-        )}
-      </div>
-    </div>
+          <Button variant="outlined" fullWidth onClick={CreateUser}>Create Account</Button>
+          < GoogleLogin  onSuccess={(response)=>{
+            console.log(jwtDecode(response.credential));
+            const data=jwtDecode(response.credential)
+            axios.post("http://localhost:5000/google/",data)
+            .then((result)=>{
+              console.log(result);
+              setRes(result.data.message);
+              dispatch(setLogin(result.data.token));
+              dispatch(setUserId(result.data.userId));
+              dispatch(setRole(result.data.role));
+              // console.log("role", result.data.role);
+              navigate("/");
+              
+            })
+            .catch((err)=>{console.log(err);
+            })
+            }} onError={()=>console.log("failed")}/>
+        </Box>
+        {Show && <Typography align="center" color="primary" sx={{ mt: 2 }}>{Res}</Typography>}
+      </Paper>
+    </Container>
   );
 }
 

@@ -1,10 +1,9 @@
 const {pool} = require("../models/db");
 
-const createNewOrder = (req, res) => {
+const createNewOrder = (req, res) => { 
   const userId = req.token.userId
-  const cart = req.token.cart_id 
+  const cart = req.body.cart_id 
   const {date_time , position} = req.body
-  console.log(req.body);
   const query = `INSERT INTO orders (user_id, cart_id, date_time, location) VALUES ($1,$2,$3,$4) RETURNING *`;
   const data = [userId, cart, date_time, JSON.stringify(position)];
   pool.query(query, data)
@@ -98,15 +97,16 @@ const getOrderById = (req, res) => {
 
 const updateOrderById = (req, res) => {
   const id = req.params.id;
-  const { Status, Team } = req.body;
+  console.log(req.body);
+  const { status, team } = req.body;
   const query = `UPDATE orders
 SET 
-    Status = COALESCE($1, Status), 
-    Team = COALESCE($2, Team)
-WHERE id = $3 
+status = COALESCE($1, status), 
+team = COALESCE($2, team)
+WHERE ido = $3 
 RETURNING *;`;
   pool
-    .query(query, [Status||null, Team||null, id])
+    .query(query, [status, team||null, id])
     .then((result) => {
       res.status(200).json({
         success: true,
@@ -115,9 +115,12 @@ RETURNING *;`;
       });
     })
     .catch((error) => {
+      console.log(error);
+      
       res.status(500).json({
         success: false,
         message: "Server error",
+
       });
     });
 };
@@ -147,11 +150,33 @@ const deleteOrderById = (req, res) => {
       });
     });
 };
+const getAllOrdersById = (req, res) => {
+  const userId = req.token.userId
 
+  const query = `SELECT * FROM orders
+INNER JOIN users ON users.id = orders.user_id
+WHERE orders.is_deleted=0 and orders.user_id=$1 `;
+  pool.query(query,[userId])
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "All the order",
+        result: result.rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
 module.exports = {
   getAllOrders,
   getOrderById,
   createNewOrder,
   updateOrderById,
   deleteOrderById,
+  getAllOrdersById
 };

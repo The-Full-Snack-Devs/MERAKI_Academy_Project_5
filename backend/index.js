@@ -8,6 +8,7 @@ const partsRoutes = require("./routes/part");
 const orderRoutes = require("./routes/order");
 const usersRouter = require("./routes/users");
 const serveciesRouter=require("./routes/services")
+const googleRouter=require("./routes/googleLogin")
 const app = express();
 
 //built-in middleware
@@ -19,6 +20,7 @@ app.use("/part", partsRoutes);
 app.use("/orders", orderRoutes);
 app.use("/users", usersRouter);
 app.use("/services",serveciesRouter)
+app.use("/google",googleRouter)
 
 const PORT = 5000;
 

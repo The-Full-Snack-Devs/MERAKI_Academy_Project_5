@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import BuildIcon from "@mui/icons-material/Build";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
+import { useSelector, useDispatch } from "react-redux";
 
 const Home = () => {
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((reducers) => reducers.authReducer.isLoggedIn);
+
 
   return (
     <Box>
@@ -43,14 +46,25 @@ const Home = () => {
           <Typography variant="h5" sx={{ mt: 2 }}>
             "Your Car, Our Care – Anytime, Anywhere."
           </Typography>
+          {isLoggedIn ? (
           <Button
             variant="contained"
             color="primary"
             sx={{ mt: 3, px: 4, py: 1.5, fontSize: "1.2rem" }}
             onClick={() => navigate("/services")}
           >
+            Go TO SERVICES PAGE
+          </Button>
+          ) : (
+            <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, px: 4, py: 1.5, fontSize: "1.2rem" }}
+            onClick={() => navigate("/register")}
+          >
             SIGN UP TO BOOK A SERVICE
           </Button>
+          )}
         </Box>
       </Box>
 

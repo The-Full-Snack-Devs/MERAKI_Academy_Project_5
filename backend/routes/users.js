@@ -8,6 +8,6 @@ const authentication = require("../middlewares/authentication");
 
 usersRouter.post("/register", register);
 usersRouter.post("/login", login);
-usersRouter.get("/", authentication, getProfile);
+usersRouter.get("/profile", authentication, getProfile);
 
 module.exports = usersRouter;
