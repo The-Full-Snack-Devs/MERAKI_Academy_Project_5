@@ -10,10 +10,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useNavigate } from "react-router-dom";
 import {   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Box,
+  Card,
+  CardMedia,
+  CardContent ,
   IconButton,
   Link,
   InputLabel,
@@ -56,16 +61,16 @@ function Order() {
     const [tPrice, settPrice] = useState(0)
     const [id, setid] = useState(null)
     const [team, setteam] = useState("")
-    
+    const [totalPrice, setTotalPrice] = useState(0);
+    const navigate = useNavigate();
+  
 
     const getAllOrders = async () => {
             
         try {
           const result = await apiClient.orders.getAllOrders(token)
           setorders(result.data.result);
-          console.log(result.data.result);
-          
-          
+          console.log(result.data.result);      
         } catch (error) {
         console.log(error);
         }
@@ -85,7 +90,7 @@ function Order() {
         const body = {status: "Confirmed", team: team[id]}
           try {
           const result = await apiClient.orders.confirmOrder(id,body,token)
-          console.log(result.data);
+          navigate(0)    
         } catch (error) {
           console.log(error);
         }
@@ -98,6 +103,14 @@ function Order() {
       useEffect(() => {
         getCartById();
       }, [id]);
+
+      useEffect(() => {
+        const total = cart.reduce((start, e) => {      
+          return start + Number(e.price)
+        }, 0);
+        setTotalPrice(total);
+            
+      }, [cart]);
 
     return (
       <>
@@ -135,10 +148,10 @@ function Order() {
                 setCartToggle(true)
               }}>{row.cart_id}</StyledTableCell>
               <StyledTableCell align="right">{row.status}</StyledTableCell>
-              <StyledTableCell align="right"><InputLabel id="demo-simple-select-label">Team</InputLabel>
+              <StyledTableCell align="right"><InputLabel id="demo-simple-select-label">{row.status == "Confirmed" ? (`Team ${row.team}`): ("Choose a Team")}</InputLabel>
   <Select
     value={team[row.ido]}
-    label="Age"
+    label="team"
     onChange={(e)=>{setteam({ ...team, [row.ido]: e.target.value })
   console.log(team);
   }}
@@ -166,13 +179,14 @@ function Order() {
   >
     {/* Modal Header */}
     <DialogTitle 
-      sx={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center", 
-        backgroundColor: darkMode ? "#414141" : "#ffffff", 
-        color: darkMode ? "#ffffff" : "#000000" 
-      }}
+     sx={{ 
+      display: "flex", 
+      justifyContent: "space-between", 
+      alignItems: "center", 
+      backgroundColor: darkMode ? "#414141" : "#ffffff", 
+      color: darkMode ? "#ffffff" : "#000000" ,
+     marginBottom:2
+    }}
     >
       Cart Detailes..
       <IconButton onClick={() => setCartToggle(false)} sx={{ color: darkMode ? "#ffffff" : "#000000" }}>
@@ -182,18 +196,36 @@ function Order() {
 
     {/* body */}
 
-    <div>
-        {cart?.map((ele,ind)=>{
-            return <div>
-                 <img src={ele.image} />
-          <p>{ele.name}</p>
-          <p>{ele.description}</p>
-          <p>{ele.price}</p>
-            </div>
-        })}
-        <p>total price: {tPrice}</p>
-        <button onClick={()=>{setCartToggle(true)}}>Place order..</button>
-    </div>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
+      {cart?.map((ele, ind) => (
+        <Card key={ind} sx={{ maxWidth: 400, width: "100%", boxShadow: 3, borderRadius: 2 ,display: "flex", alignItems: "center"}}>
+          <CardMedia component="img" height="100" image={ele.imagep} sx={{height: "100%", width:"40%", objectFit: "cover"}} />
+        
+          <CardContent >
+            <Typography variant="h6" component="div">
+              {ele.namep}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {ele.name}
+            </Typography>
+            <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+              ${ele.price}
+            </Typography>
+          </CardContent>
+          
+        </Card>
+      ))}
+    </Box>
+    {/* لحساب التوتل  */}
+    {cart.length > 0 && (
+        <Box sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="h5" fontWeight="bold">
+            Total Price: ${totalPrice}
+          </Typography>
+         
+        </Box>
+      )}
+
 
     {/* Modal Footer */}
     <DialogActions sx={{ backgroundColor: darkMode ? "#414141" : "#ffffff" }}>
