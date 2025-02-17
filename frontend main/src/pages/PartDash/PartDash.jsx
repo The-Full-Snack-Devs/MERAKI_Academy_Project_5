@@ -1,146 +1,149 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setParts,
-  addPart,
-  updatePart,
-  deletePart,
-} from "../../Service/redux/reducers/PartDash/index";
+import { setParts, addPart, updatePart, deletePart } from "../../Service/redux/reducers/PartDash/index";
 import { apiClient } from "../../Service/api/api";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, IconButton, Container } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
 const PartDash = () => {
-  const parts = useSelector((redusers) => redusers.partReduser.parts);
-  const role = useSelector((redusers) => {
-    console.log(redusers.authReducer);
-    return redusers.authReducer.Role;
-  });
-  const token = useSelector((reduser) => reduser.authReducer.token);
-  console.log(role);
+  const parts = useSelector((state) => state.partReduser.parts);
+  const role = useSelector((state) => state.authReducer.Role);
+  const token = useSelector((state) => state.authReducer.token);
   const dispatch = useDispatch();
-  const [namep, setnamep] = useState("");
-  const [price, setPrice] = useState("");
-  const [serviceId, setServiceId] = useState("");
-  const [imagep, setImagep] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
   const [editingPart, setEditingPart] = useState(null);
+  const [partData, setPartData] = useState({ namep: "", price: "", serviceId: "", imagep: "" });
+
   const getAllParts = async () => {
     try {
       const result = await apiClient.part.getAllParts();
       dispatch(setParts(result.data.result));
-      console.log(result.data.result);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleAddPart = async () => {
-    const newPart = { namep, price, service_id: serviceId, imagep };
-    try {
-      const result = await apiClient.part.createNewPart(newPart, token);
-      dispatch(addPart(result.data.result));
-      setnamep("");
-      setPrice("");
-      setServiceId("");
-      setImagep("");
-      getAllParts();
-    } catch (error) {
-      console.error("Add part error:", error);
-    }
-  };
-  const handleUpdatePart = async (id) => {
-    const updatedPart = { namep, price, service_id: serviceId, imagep };
-    try {
-      const result = await apiClient.part.updatePartById(id, updatedPart);
-      dispatch(updatePart(result.data.result));
-      setEditingPart(null);
-      getAllParts();
-    } catch (error) {
-      console.error("updating part error:", error);
-    }
-  };
 
-
-  const handleDeletePart = async (id) => {
-  try {
-    await apiClient.part.deletePartById(id);
-    dispatch(deletePart(id));
-    getAllParts();
-  } catch (error) {
-    console.error("deleting part error:", error);
-  }
-};
   useEffect(() => {
     getAllParts();
   }, []);
-  // {con ? (exu) : (exu)}
+
+  const handleSave = async () => {
+    try {
+      if (editingPart) {
+        await apiClient.part.updatePartById(editingPart, partData);
+        dispatch(updatePart(partData));
+      } else {
+        await apiClient.part.createNewPart(partData, token);
+        dispatch(addPart(partData));
+      }
+      setOpenModal(false);
+      setEditingPart(null);
+      getAllParts();
+    } catch (error) {
+      console.error("Error saving part:", error);
+    }
+  };
+
   return (
-    <div>
-      <h2>Part Dashboard</h2>
-      {role === "admin" ? (
-        <div>
-          <button onClick={handleAddPart}>Add Part</button>
-          <input
-            placeholder="namep"
-            value={namep}
-            onChange={(e) => setnamep(e.target.value)}
-          />
-          <input
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
-          <input
-            placeholder="Service ID"
-            value={serviceId}
-            onChange={(e) => setServiceId(Number(e.target.value))}
-          />
-          <input
-            placeholder="Imagep URL"
-            value={imagep}
-            onChange={(e) => setImagep(e.target.value)}
-          />
-        </div>
-      ) : null}
-      {parts?.map((part) => (
-        <div key={part.idp}>
-          <img src={part.imagep} alt={part.namep} />
-          <h5>{part.namep}</h5>
-          <p>Price: {part.price}</p>
-          <p>Service ID: {part.service_id}</p>
-          {role === "admin" && (
-            <>
-              {editingPart !== part.idp ? (
-                <button onClick={() => setEditingPart(part.idp)}>Edit</button>
-              ) : (
-                <>
-                  <input
-                    placeholder="namep"
-                    value={namep}
-                    onChange={(e) => setnamep(e.target.value)}
-                  />
-                  <input
-                    placeholder="Price"
-                    value={price}
-                    onChange={(e) => setPrice(Number(e.target.value))}
-                  />
-                  <input
-                    placeholder="Service ID"
-                    value={serviceId}
-                    onChange={(e) => setServiceId(Number(e.target.value))}
-                  />
-                  <input
-                    placeholder="Image URL"
-                    value={imagep}
-                    onChange={(e) => setImagep(e.target.value)}
-                  />
-                  <button onClick={() => handleUpdatePart(part.idp)}>Save Update</button>
-                  <button onClick={() => setEditingPart(null)}>Cancel</button>
-                </>
-              )}
-              <button onClick={() => handleDeletePart(part.idp)}>Delete</button>
-            </>
-          )}
-        </div>
-      ))}
-    </div>
+    <Container fullWidth sx={{ mt: 10 }}>
+
+      <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
+        Add New Part
+      </Button>
+
+      <TableContainer component={Paper} sx={{ mt: 3 }}>
+        <Table sx={{ minWidth: 700 }}>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Price</StyledTableCell>
+              <StyledTableCell>Service ID</StyledTableCell>
+              <StyledTableCell>Image</StyledTableCell>
+              {role === "admin" && <StyledTableCell>Actions</StyledTableCell>}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {parts.map((part) => (
+              <StyledTableRow key={part.idp}>
+                <StyledTableCell>{part.idp}</StyledTableCell>
+                <StyledTableCell>{part.namep}</StyledTableCell>
+                <StyledTableCell>{part.price}</StyledTableCell>
+                <StyledTableCell>{part.service_id}</StyledTableCell>
+                <StyledTableCell>
+                  <img src={part.imagep} alt={part.namep} width={50} height={50} />
+                </StyledTableCell>
+                {role === "admin" && (
+                  <StyledTableCell>
+                    <Button variant="outlined" onClick={() => { setEditingPart(part.idp); setPartData(part); setOpenModal(true); }}>
+                      Edit
+                    </Button>
+                    <Button variant="contained" color="error" onClick={async () => {
+                      await apiClient.part.deletePartById(part.idp);
+                      dispatch(deletePart(part.idp));
+                      getAllParts();
+                    }}>
+                      Delete
+                    </Button>
+                  </StyledTableCell>
+                )}
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Modal */}
+      <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+        <DialogTitle>
+          {editingPart ? "Edit Part" : "Add New Part"}
+          <IconButton onClick={() => setOpenModal(false)} sx={{ position: "absolute", right: 8, top: 8 }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <TextField fullWidth margin="dense" label="Name" value={partData.namep} onChange={(e) => setPartData({ ...partData, namep: e.target.value })} />
+          <TextField fullWidth margin="dense" label="Price" type="number" value={partData.price} onChange={(e) => setPartData({ ...partData, price: e.target.value })} />
+          <TextField fullWidth margin="dense" label="Service ID" value={partData.serviceId} onChange={(e) => setPartData({ ...partData, serviceId: e.target.value })} />
+          <TextField fullWidth margin="dense" label="Image URL" value={partData.imagep} onChange={(e) => setPartData({ ...partData, imagep: e.target.value })} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenModal(false)}>Cancel</Button>
+          <Button variant="contained" color="primary" onClick={handleSave}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
   );
 };
+
 export default PartDash;
