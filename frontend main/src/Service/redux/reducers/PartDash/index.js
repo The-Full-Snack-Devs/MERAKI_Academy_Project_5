@@ -19,14 +19,14 @@ const partsSlice = createSlice({
     updatePart: (state, action) => {
       const updatedPart = action.payload;
       state.parts = state.parts.map((part) =>
-        part.id === updatedPart.id
-          ? { ...part, title: updatedPart.title, price: updatedPart.price, service_id: updatedPart.service_id }
+        part.idp === updatedPart.idp
+          ? { ...part, namep: updatedPart.namep, price: updatedPart.price, service_id: updatedPart.service_id }
           : part
       );
     },
     
     deletePart: (state, action) => {
-      state.parts = state.parts.filter((part) => part.id !== action.payload);
+      state.parts = state.parts.filter((part) => part.idp !== action.payload);
     },
   },
 });
