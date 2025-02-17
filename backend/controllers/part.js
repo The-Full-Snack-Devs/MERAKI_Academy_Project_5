@@ -46,7 +46,7 @@ const getAllParts = (req, res) => {
 };
 
 const getPartById = (req, res) => {
-  const id = req.params.idp;
+  const id = req.params.id;
   const query = `SELECT * FROM parts WHERE parts.idp=$1 AND parts.is_deleted=0;`;
   const data = [id];
 
@@ -56,7 +56,7 @@ const getPartById = (req, res) => {
       if (result.rows.length !== 0) {
         res.status(200).json({
           success: true,
-          message: `The part with id: ${idp}`,
+          message: `The part with id: ${id}`,
           result: result.rows,
         });
       } else {
@@ -97,18 +97,19 @@ const getPartsByServiceId = (req, res) => {
 };
 
 const updatePartById = (req, res) => {
-  const id = req.params.idp;
+  const id = req.params.id;
   let { namep, price, service_id, imagep } = req.body;
 
   const query = `UPDATE parts 
-  SET namep = COALESCE($1,namep), 
-  price = COALESCE($2, price), 
-  service_id = COALESCE($3, service_id) 
-  WHERE id=$4 AND is_deleted = 0  
+  SET namep = COALESCE($1, namep), 
+      price = COALESCE($2, price), 
+      service_id = COALESCE($3, service_id),
+      imagep = COALESCE($4, imagep)
+  WHERE idp=$5 AND is_deleted = 0  
   RETURNING *;`;
 
 
-  const data = [namep || null, price || null, service_id || null , imagep || null];
+  const data = [namep || null, price || null, service_id || null , imagep || null, id];
 
   pool
     .query(query, data)
@@ -116,7 +117,7 @@ const updatePartById = (req, res) => {
       if (result.rows.length !== 0) {
         res.status(200).json({
           success: true,
-          message: `Part with id: ${idp} updated successfully `,
+          message: `Part with id: ${id} updated successfully `,
           result: result.rows[0],
         });
       } else {
@@ -134,7 +135,7 @@ const updatePartById = (req, res) => {
 
 
 const deletePartById = (req, res) => {
-  const id = req.params.idp;
+  const id = req.params.id;
   const query = `UPDATE parts SET is_deleted=1 WHERE idp=$1;`;
   const data = [id];
   pool
@@ -143,7 +144,7 @@ const deletePartById = (req, res) => {
       if (result.rowCount !== 0) {
         res.status(200).json({
           success: true,
-          message: `Part with id: ${idp} deleted successfully`,
+          message: `Part with id: ${id} deleted successfully`,
         });
       } else {
         throw new Error("Error happened while deleting Part");
