@@ -23,10 +23,11 @@ const Navbar = () => {
     <AppBar position="fixed" color="default" sx={{ backgroundColor: darkMode ? "#414141" : "#ffffff", color: darkMode ? "#ffffff" : "#000000" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         
-        <Typography variant="h6" sx={{ display: "flex", alignItems: "center", cursor: "pointer" }} onClick={() => navigate("/")}>
+        <Typography variant="h6" sx={{ display: "flex", alignItems: "center", cursor: "pointer" }} >
           <img src={logo} alt="Mech2U" style={{ height: 50, marginRight: 10 }} onClick={() => navigate("/")}/>
-          Join Our Team
+          <Typography onClick={() => navigate("/job")}>Join Our Team</Typography>
         </Typography>
+       
 
         <div className="nav-links" style={{ display: "flex", gap: "20px" }}>
         {isLoggedIn ? (
