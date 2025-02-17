@@ -17,14 +17,20 @@ export const apiClient = {
     },getAllParts: async (token) => {
       return await axios.get(`/part` , appendHeadrs(token));
     },
-    updatePartById: async (id, token) =>{
-      return await axios.get(`/part/${id}` , appendHeadrs(token));
+
+    getAllParts: async () => {
+      return await axios.get(`/part/`);
+    },
+    updatePartById: async (id, updatedPart) =>{
+      return await axios.put(`/part/${id}`, updatedPart);
+
     },
     createNewPart: async (token) => {
       return await axios.get(`/part`, appendHeadrs(token));
     },
-    deletePartById: async (id, token) => {
-      return await axios.get(`/part/${id}`, appendHeadrs(token));
+
+    deletePartById: async (id) => {
+      return await axios.delete(`/part/${id}`);
     }
   },
   users:{

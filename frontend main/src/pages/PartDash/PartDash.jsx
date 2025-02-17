@@ -17,10 +17,10 @@ const PartDash = () => {
   const token = useSelector((reduser) => reduser.authReducer.token);
   console.log(role);
   const dispatch = useDispatch();
-  const [title, setTitle] = useState("");
+  const [namep, setnamep] = useState("");
   const [price, setPrice] = useState("");
   const [serviceId, setServiceId] = useState("");
-  const [image, setImage] = useState("");
+  const [imagep, setImagep] = useState("");
   const [editingPart, setEditingPart] = useState(null);
   const getAllParts = async () => {
     try {
@@ -32,27 +32,23 @@ const PartDash = () => {
     }
   };
   const handleAddPart = async () => {
-    const newPart = { title, price, service_id: serviceId, image };
+    const newPart = { namep, price, service_id: serviceId, imagep };
     try {
-      const result = await apiClient.parts.createNewPart(newPart, token);
+      const result = await apiClient.part.createNewPart(newPart, token);
       dispatch(addPart(result.data.result));
-      setTitle("");
+      setnamep("");
       setPrice("");
       setServiceId("");
-      setImage("");
+      setImagep("");
       getAllParts();
     } catch (error) {
       console.error("Add part error:", error);
     }
   };
   const handleUpdatePart = async (id) => {
-    const updatedPart = { title, price, service_id: serviceId, image };
+    const updatedPart = { namep, price, service_id: serviceId, imagep };
     try {
-      const result = await apiClient.parts.updatePartById(
-        id,
-        updatedPart,
-        token
-      );
+      const result = await apiClient.part.updatePartById(id, updatedPart);
       dispatch(updatePart(result.data.result));
       setEditingPart(null);
       getAllParts();
@@ -60,15 +56,17 @@ const PartDash = () => {
       console.error("updating part error:", error);
     }
   };
+
+
   const handleDeletePart = async (id) => {
-    try {
-      await apiClient.parts.deletePartById(id, token);
-      dispatch(deletePart(id));
-      getAllParts();
-    } catch (error) {
-      console.error("deleting part error:", error);
-    }
-  };
+  try {
+    await apiClient.part.deletePartById(id);
+    dispatch(deletePart(id));
+    getAllParts();
+  } catch (error) {
+    console.error("deleting part error:", error);
+  }
+};
   useEffect(() => {
     getAllParts();
   }, []);
@@ -80,66 +78,64 @@ const PartDash = () => {
         <div>
           <button onClick={handleAddPart}>Add Part</button>
           <input
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            placeholder="namep"
+            value={namep}
+            onChange={(e) => setnamep(e.target.value)}
           />
           <input
             placeholder="Price"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => setPrice(Number(e.target.value))}
           />
           <input
             placeholder="Service ID"
             value={serviceId}
-            onChange={(e) => setServiceId(e.target.value)}
+            onChange={(e) => setServiceId(Number(e.target.value))}
           />
           <input
-            placeholder="Image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            placeholder="Imagep URL"
+            value={imagep}
+            onChange={(e) => setImagep(e.target.value)}
           />
         </div>
       ) : null}
       {parts?.map((part) => (
-        <div key={part.id}>
-          <img src={part.image} alt={part.title} />
-          <h5>{part.title}</h5>
+        <div key={part.idp}>
+          <img src={part.imagep} alt={part.namep} />
+          <h5>{part.namep}</h5>
           <p>Price: {part.price}</p>
           <p>Service ID: {part.service_id}</p>
           {role === "admin" && (
             <>
-              {editingPart !== part.id ? (
-                <button onClick={() => setEditingPart(part.id)}>Edit</button>
+              {editingPart !== part.idp ? (
+                <button onClick={() => setEditingPart(part.idp)}>Edit</button>
               ) : (
                 <>
                   <input
-                    placeholder="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="namep"
+                    value={namep}
+                    onChange={(e) => setnamep(e.target.value)}
                   />
                   <input
                     placeholder="Price"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={(e) => setPrice(Number(e.target.value))}
                   />
                   <input
                     placeholder="Service ID"
                     value={serviceId}
-                    onChange={(e) => setServiceId(e.target.value)}
+                    onChange={(e) => setServiceId(Number(e.target.value))}
                   />
                   <input
                     placeholder="Image URL"
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
+                    value={imagep}
+                    onChange={(e) => setImagep(e.target.value)}
                   />
-                  <button onClick={() => handleUpdatePart(part.id)}>
-                    Save Update
-                  </button>
+                  <button onClick={() => handleUpdatePart(part.idp)}>Save Update</button>
                   <button onClick={() => setEditingPart(null)}>Cancel</button>
                 </>
               )}
-              <button onClick={() => handleDeletePart(part.id)}>Delete</button>
+              <button onClick={() => handleDeletePart(part.idp)}>Delete</button>
             </>
           )}
         </div>
