@@ -45,6 +45,8 @@ const Cart = () => {
       return start + Number(e.price)
     }, 0);
     setTotalPrice(total);
+    console.log(cart);
+    
         
   }, [cart]);
 
@@ -61,7 +63,7 @@ const Cart = () => {
             <TableRow sx={{ backgroundColor: "#f04f23" }}>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Image</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Name</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Description</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Service</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Price</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Delete</TableCell>
             </TableRow>
@@ -72,13 +74,13 @@ const Cart = () => {
             {cart?.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  <img src={item.image} alt={item.name} style={{ width: 80, height: 50, borderRadius: 5 }} />
+                  <img src={item.imagep} alt={item.namep} style={{ width: 80, height: 50, borderRadius: 5 }} />
                 </TableCell>
                 <TableCell>
-                  <Typography fontWeight="bold">{item.name}</Typography>
+                  <Typography fontWeight="bold">{item.namep}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body2" color="text.secondary">{item.description}</Typography>
+                  <Typography variant="body2" color="text.secondary">{item.name}</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6" color="primary">${item.price}</Typography>

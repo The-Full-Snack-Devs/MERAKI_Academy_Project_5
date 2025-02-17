@@ -105,7 +105,7 @@ const DetailsServices = () => {
         {detailsServices.map((part, index) => (
           <Grid item xs={12} sm={6} md={4} key={index} mb={5}>
             <Card sx={{ boxShadow: 5, transition: "0.3s", "&:hover": { transform: "scale(1.05)" } }}>
-              <CardMedia component="img" height="200" image={part.image} alt={part.name} />
+              <CardMedia component="img" height="200" image={part.imagep} alt={part.name} />
               <CardContent>
                 <Typography variant="h6">{part.namep}</Typography>
                 <Typography variant="body1" color="text.secondary">

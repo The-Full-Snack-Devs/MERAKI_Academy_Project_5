@@ -1,16 +1,8 @@
 import axios from "axios";
 import Services from "../../pages/Services";
 axios.defaults.baseURL = "http://localhost:5000"  ;
-import { useSelector } from "react-redux";
-
-  // const token = useSelector((reduser) => {reduser.authReducer.token})
-   
-
-
 
 const appendHeadrs = (token)=>{
-  console.log(token);
-  
     return {
         headers : {
             Authorization: `Bearer ${token}`
@@ -18,24 +10,21 @@ const appendHeadrs = (token)=>{
     }
 }
 
-
 export const apiClient = {
   part: {
     getPartByServiceId: async (id, token) => {
       return await axios.get(`/part/service/${id}`, appendHeadrs(token));
+    },getAllParts: async (token) => {
+      return await axios.get(`/part` , appendHeadrs(token));
     },
-    getAllParts: async () => {
-      return await axios.get(`/part/`);
+    updatePartById: async (id, token) =>{
+      return await axios.get(`/part/${id}` , appendHeadrs(token));
     },
-    updatePartById: async (idp, updatedPart) =>{
-      return await axios.put(`/part/${idp}`, updatedPart);
+    createNewPart: async (token) => {
+      return await axios.get(`/part`, appendHeadrs(token));
     },
-    createNewPart: async (newPart) => {
-      console.log(newPart);
-      return await axios.post(`/part/`, newPart);
-    },
-    deletePartById: async (idp) => {
-      return await axios.delete(`/part/${idp}`);
+    deletePartById: async (id, token) => {
+      return await axios.get(`/part/${id}`, appendHeadrs(token));
     }
   },
   users:{
@@ -85,13 +74,11 @@ export const apiClient = {
       },
   },
   profile:{
-    GetProfile:async (token)=>{
-      return await axios.get(`/users/profile`,appendHeadrs(token))
+      GetProfile:async (token)=>{
+        return await axios.get(`/users/profile`,appendHeadrs(token))
+  },
+  getOrderById:async (token)=>{
+    return await axios.get(`/orders/all`,appendHeadrs(token))
+  },
 },
-getOrderById:async (token)=>{
-  return await axios.get(`/orders/all`,appendHeadrs(token))
-
-},
-
-}
 }
