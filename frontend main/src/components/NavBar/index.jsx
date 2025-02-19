@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { AppBar, Toolbar, Typography, Button, IconButton } from "@mui/material";
-import { Menu as MenuIcon} from "@mui/icons-material";
+import { Margin, Menu as MenuIcon} from "@mui/icons-material";
 import { ThemeContext } from "../MUI/MUITheme";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/Mech2U_logo_transparent-removebg-preview.png"
