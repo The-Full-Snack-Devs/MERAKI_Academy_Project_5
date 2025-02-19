@@ -97,7 +97,6 @@ const getOrderById = (req, res) => {
 
 const updateOrderById = (req, res) => {
   const id = req.params.id;
-  console.log(req.body);
   const { status, team } = req.body;
   const query = `UPDATE orders
 SET 
@@ -125,7 +124,34 @@ RETURNING *;`;
     });
 };
 //
+const updateOrderByIdEmp = (req, res) => {
+  const id = req.params.id;
+  const { status } = req.body;
+  
+  const query = `UPDATE orders
+SET 
+status = COALESCE($1, status)
+WHERE ido = $2 
+RETURNING *;`;
+  pool
+    .query(query, [status, id])
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `Orders with id: ${id} updated successfully `,
+        Servecies:result.rows,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      
+      res.status(500).json({
+        success: false,
+        message: "Server error",
 
+      });
+    });
+};
 const deleteOrderById = (req, res) => {
   const id = req.params.id;
   const query = `UPDATE orders SET is_deleted=1 WHERE id=$1;`;
@@ -172,11 +198,36 @@ WHERE orders.is_deleted=0 and orders.user_id=$1 `;
       });
     });
 };
+const getAllOrdersByTeam = (req, res) => {
+  const userId = req.params.team
+// console.log("teaaaaaam",req.params.);
+
+  const query = `SELECT * FROM orders
+INNER JOIN users ON users.id = orders.user_id
+WHERE orders.is_deleted=0 and orders.team=$1 `;
+  pool.query(query,[userId])
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "All the order",
+        result: result.rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
 module.exports = {
   getAllOrders,
   getOrderById,
   createNewOrder,
   updateOrderById,
   deleteOrderById,
-  getAllOrdersById
+  getAllOrdersById,
+  getAllOrdersByTeam,
+  updateOrderByIdEmp
 };

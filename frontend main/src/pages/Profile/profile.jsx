@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { apiClient } from '../../Service/api/api';
 import { setProfile , setOrders } from '../../Service/redux/reducers/Profile';
 import { Container,Link,Dialog,DialogTitle,
-  DialogContent, IconButton,
+  DialogContent, IconButton,InputLabel,Select,
   DialogActions, Card, CardContent, Avatar, Typography, Box ,Button,CardMedia } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -42,7 +42,9 @@ const Profile = () => {
   const [id, setid] = useState(null)
   const [CartToggle, setCartToggle] = useState(false)
   const [totalPrice, setTotalPrice] = useState(0);
-
+  const role = useSelector((reducers) => reducers.authReducer.Role);
+  const [teamId, setTeamId] = useState(null)
+const [done, setDone] = useState(false)
 
   const profile = useSelector((state) => state.profileReduser.profile);
   const orders = useSelector((state) => state.profileReduser.orders);
@@ -51,6 +53,8 @@ const Profile = () => {
   const getProfileById = async () => {
     try {
       const result = await apiClient.profile.GetProfile(token);
+      console.log("aloooooooo:",result.data);
+      
       dispatch(setProfile(result.data.User));
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -74,12 +78,47 @@ const Profile = () => {
       console.log(error);
     }
   }
+  const getProfileteam = async () => {
+    try {
+      const result = await apiClient.profile.getProfileTeam(token);
+      console.log("teaaaam:",result.data);
+      setTeamId(result.data.User.teams)
+
+      dispatch(setProfile(result.data.User));
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+  const getOrdersTeam = async (id) => {
+
+    try {
+      const result = await apiClient.profile.getOrderByTeam(id,token);
+      dispatch(setOrders(result.data.result));
+
+      console.log("orders",result.data.result);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+
   useEffect(() => {
-    getProfileById();
-    getOrdersById();
+    getOrdersTeam(teamId)
+  }, [teamId,done]);
+
+  useEffect(() => {
+    if(role==="emp"){
+      getProfileteam()
+
+    }else{
+      getProfileById();
+      getOrdersById();
+    }
+   
   }, []);
   useEffect(() => {
     getCartById();
+
   }, [id]);
   useEffect(() => {
     const total = cart.reduce((start, e) => {      
@@ -88,6 +127,17 @@ const Profile = () => {
     setTotalPrice(total);
         
   }, [cart]);
+  const confirmOrderEmp= async (id)=>{
+    console.log("hon :",id);
+    
+    const body = {status: "Done"}
+      try {
+      const result = await apiClient.orders.confirmOrderEmp(id,body,token)
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Container sx={{ marginTop: 10, paddingBottom: 5 }}>
@@ -125,6 +175,110 @@ const Profile = () => {
           </Typography>
         </CardContent>
       </Card>
+      {role==="emp"&& <>
+        <Typography variant="h3" color="dark">
+                  YOUR ORDERS :
+                  </Typography>
+      <TableContainer component={Paper} sx={{ marginTop: 7, boxShadow: 8, borderRadius: 4 }}>
+      <Table sx={{ minWidth: 700, mt: "70px"}} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>id</StyledTableCell>
+            <StyledTableCell align="right">Name</StyledTableCell>
+            <StyledTableCell align="right">Email</StyledTableCell>
+            <StyledTableCell align="right">Phone</StyledTableCell>
+            <StyledTableCell align="right">Location</StyledTableCell>
+            <StyledTableCell align="right">date+time</StyledTableCell>
+            <StyledTableCell align="right">Cart</StyledTableCell>
+            <StyledTableCell align="right">Status</StyledTableCell>
+            <StyledTableCell align="right">Confirmation</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {orders?.map((row) => (
+            <StyledTableRow key={row.name}>
+              <StyledTableCell component="th" scope="row">
+                {row.ido}
+              </StyledTableCell>
+              <StyledTableCell align="right">{row.firstname} {row.lastname}</StyledTableCell>
+              <StyledTableCell align="right">{row.email}</StyledTableCell>
+              <StyledTableCell align="right">{row.phone}</StyledTableCell>
+              <StyledTableCell align="right"><Link href= {`https://maps.google.com/?q=${row.location.lat},${row.location.lng}`} underline="hover"> {'Open Location'}</Link></StyledTableCell>
+              <StyledTableCell align="right"><TextField  disabled={true} type="datetime-local" defaultValue={row.date_time} /></StyledTableCell>
+              <StyledTableCell align="right" onClick={()=>{
+                setid(row.cart_id)
+                setCartToggle(true)
+              }}>{row.cart_id}</StyledTableCell>
+              <StyledTableCell align="right">{row.status}</StyledTableCell>
+         
+              <StyledTableCell align="right"> <Button  variant="outlined" color="primary" onClick={() => {
+                confirmOrderEmp(row.ido)
+                setDone(!done)
+              }}> Done </Button>
+              </StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    
+    {CartToggle && ( 
+  <Dialog 
+    fullWidth 
+    maxWidth="sm"
+    open={CartToggle} 
+    onClose={() => setCartToggle(false)} 
+  >
+    {/* Modal Header */}
+    <DialogTitle 
+      sx={{ 
+        display: "flex", 
+        justifyContent: "space-between", 
+        alignItems: "center", 
+        backgroundColor: darkMode ? "#414141" : "#ffffff", 
+        color: darkMode ? "#ffffff" : "#000000" 
+      }}
+    >
+      Cart Detailes..
+      <IconButton onClick={() => setCartToggle(false)} sx={{ color: darkMode ? "#ffffff" : "#000000" }}>
+        <CloseIcon />
+      </IconButton>
+    </DialogTitle>
+
+    {/* body */}
+
+    <div>
+        {cart?.map((ele,ind)=>{
+            return <div>
+                 <img src={ele.image} />
+          <p>{ele.name}</p>
+          <p>{ele.description}</p>
+          <p>{ele.price}</p>
+            </div>
+        })}
+        {/* <p>total price: {tPrice}</p> */}
+        <button onClick={()=>{setCartToggle(true)}}>Place order..</button>
+    </div>
+
+    {/* Modal Footer */}
+    <DialogActions sx={{ backgroundColor: darkMode ? "#414141" : "#ffffff" }}>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: "#f04f23",
+          color: "#ffffff",
+          "&:hover": { backgroundColor: "#d9441d" },
+        }}
+        onClick={() => setCartToggle(false)}
+      >
+        Close
+      </Button>
+    </DialogActions>
+  </Dialog>
+)}
+
+    </>}
+    {role!=="emp"&&<>
       <Typography variant="h3" color="dark">
                   YOUR ORDERS :
                   </Typography>
@@ -168,6 +322,7 @@ const Profile = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      </>}
       {CartToggle && ( 
   <Dialog 
     fullWidth 
