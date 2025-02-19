@@ -168,8 +168,8 @@ const Services = () => {
           <Typography variant="h6" sx={{ mb: 2 }}>Add New Service</Typography>
           <TextField fullWidth label="Name" value={name} onChange={(e) => setName(e.target.value)} sx={{ mb: 2 }} />
           <TextField fullWidth label="Description" value={description} onChange={(e) => setDescription(e.target.value)} sx={{ mb: 2 }} />
-          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>Upload Image<input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} /></Button>
-          <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={addNewService}>Save</Button>
+          <Button component="label" fullWidth variant="outlined" startIcon={<CloudUploadIcon />}>Upload Image<input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} /></Button>
+          <Button fullWidth variant="contained" color="primary" sx={{ mt: 2 }} onClick={addNewService}>Save</Button>
         </Box>
       </Modal>
 

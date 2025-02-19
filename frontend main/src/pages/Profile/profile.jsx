@@ -176,22 +176,23 @@ const [done, setDone] = useState(false)
         </CardContent>
       </Card>
       {role==="emp"&& <>
+      <br></br>
         <Typography variant="h3" color="dark">
                   YOUR ORDERS :
                   </Typography>
-      <TableContainer component={Paper} sx={{ marginTop: 7, boxShadow: 8, borderRadius: 4 }}>
-      <Table sx={{ minWidth: 700, mt: "70px"}} aria-label="customized table">
+      <TableContainer component={Paper} sx={{  boxShadow: 8, borderRadius: 4 }}>
+      <Table sx={{ minWidth: 700}} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>id</StyledTableCell>
-            <StyledTableCell align="right">Name</StyledTableCell>
-            <StyledTableCell align="right">Email</StyledTableCell>
-            <StyledTableCell align="right">Phone</StyledTableCell>
-            <StyledTableCell align="right">Location</StyledTableCell>
-            <StyledTableCell align="right">date+time</StyledTableCell>
-            <StyledTableCell align="right">Cart</StyledTableCell>
-            <StyledTableCell align="right">Status</StyledTableCell>
-            <StyledTableCell align="right">Confirmation</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }}>id</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Name</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Email</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Phone</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Location</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">date+time</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Cart</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Status</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Confirmation</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -208,7 +209,7 @@ const [done, setDone] = useState(false)
               <StyledTableCell align="right" onClick={()=>{
                 setid(row.cart_id)
                 setCartToggle(true)
-              }}>{row.cart_id}</StyledTableCell>
+              }}><Button>show</Button></StyledTableCell>
               <StyledTableCell align="right">{row.status}</StyledTableCell>
          
               <StyledTableCell align="right"> <Button  variant="outlined" color="primary" onClick={() => {
@@ -279,17 +280,19 @@ const [done, setDone] = useState(false)
 
     </>}
     {role!=="emp"&&<>
+      <br></br>
       <Typography variant="h3" color="dark">
                   YOUR ORDERS :
                   </Typography>
-      <TableContainer component={Paper} sx={{ marginTop: 7, boxShadow: 8, borderRadius: 4 }}>
+                  
+      <TableContainer component={Paper} sx={{  boxShadow: 8, borderRadius: 4 }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
-            <TableRow>
-              <StyledTableCell>services</StyledTableCell>
-              <StyledTableCell align="right">date+time</StyledTableCell>
-              <StyledTableCell align="right">location</StyledTableCell>
-              <StyledTableCell align="right">Status</StyledTableCell>
+            <TableRow >
+              <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }}>services</StyledTableCell>
+              <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">date+time</StyledTableCell>
+              <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">location</StyledTableCell>
+              <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Status</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
