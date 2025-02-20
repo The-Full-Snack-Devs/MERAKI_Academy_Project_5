@@ -14,10 +14,12 @@ import {
   CardContent,
   CardMedia,
   Box,
-  IconButton
+  IconButton, Alert, AlertTitle
 } from "@mui/material";
 
 const DetailsServices = () => {
+  const [open, setOpen] = useState(false);
+
   const { id } = useParams();
   const detailsServices = useSelector(
     (state) => state.DetailsServicesReduser.detailsServices
@@ -116,14 +118,38 @@ const DetailsServices = () => {
                   color="primary"
                   fullWidth
                   sx={{ mt: 2 }}
-                  onClick={() => addPartToCart(part.idp)}
+                  onClick={() =>{ 
+                    addPartToCart(part.idp)
+                    setOpen(true);
+                    setTimeout(() => setOpen(false), 1000); // إخفاء التنبيه بعد 3 ثوانٍ
+                  }}
                 >
+                  
                   Add to Cart
                 </Button>
+               
               </CardContent>
             </Card>
           </Grid>
         ))}
+         {open && (
+           <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1000, // لضمان الظهور فوق العناصر الأخرى
+            minWidth: "300px",
+          }}>
+        <Alert 
+          severity="success" 
+          style={{ marginTop: "20px" }}
+        >
+          <AlertTitle  >add Successfully</AlertTitle>
+        
+        </Alert>
+        </div>
+          )}
       </Grid>
     </Container>
   );

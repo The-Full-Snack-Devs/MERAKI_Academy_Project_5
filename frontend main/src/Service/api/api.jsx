@@ -75,6 +75,9 @@ export const apiClient = {
       confirmOrder: async (id,body,token) => {
         return await axios.put(`/orders/${id}`, body, appendHeadrs(token));
       },
+      confirmOrderEmp: async (id,body,token) => {
+        return await axios.put(`/orders/emp/${id}`, body, appendHeadrs(token));
+      },
   },
   profile:{
       GetProfile:async (token)=>{
@@ -84,4 +87,15 @@ export const apiClient = {
     return await axios.get(`/orders/all`,appendHeadrs(token))
   },
 },
+
+getProfileTeam:async(token)=>{
+  return await axios.get(`/users/team`,appendHeadrs(token))
+
+},
+getOrderByTeam:async(id,token)=>{
+  return await axios.get(`/orders/team/${id}`,appendHeadrs(token))
+
+},
+
+}
 }

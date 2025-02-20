@@ -114,7 +114,7 @@ function Order() {
 
     return (
       <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} >
       <Table sx={{ minWidth: 700, mt: "70px"}} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -137,9 +137,9 @@ function Order() {
               <StyledTableCell component="th" scope="row">
                 {row.ido}
               </StyledTableCell>
-              <StyledTableCell align="right"><TextField  disabled={true} type="datetime-local" defaultValue={row.created_at.substring(0, 16)} /></StyledTableCell>
+              <StyledTableCell align="right"><TextField  disabled={true} type="datetime-local" defaultValue={row.created_at.substring(0, 16)} sx={{width:"213px"}} /></StyledTableCell>
               <StyledTableCell align="right">{row.firstname} {row.lastname}</StyledTableCell>
-              <StyledTableCell align="right">{row.email}</StyledTableCell>
+              <StyledTableCell align="right" >{row.email}</StyledTableCell >
               <StyledTableCell align="right">{row.phone}</StyledTableCell>
               <StyledTableCell align="right"><Link href= {`https://maps.google.com/?q=${row.location.lat},${row.location.lng}`} underline="hover"> {'Open Location'}</Link></StyledTableCell>
               <StyledTableCell align="right"><TextField  disabled={true} type="datetime-local" defaultValue={row.date_time} /></StyledTableCell>

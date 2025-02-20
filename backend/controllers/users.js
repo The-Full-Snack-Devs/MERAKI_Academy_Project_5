@@ -141,9 +141,42 @@ WHERE users.id = $1 AND cart.status = 'user'`;
       });
     });
 };
+const getProfileTeam = (req, res) => {
+  let id = req.token.userId;
+  const query = `SELECT * FROM users 
+INNER JOIN teams_users ON users.id = teams_users.users
+WHERE users.id = $1 `;
+  const data = [id];
+  pool
+  .query(query, data)
+    .then((User) => {
+      if (!User) {
+        return res.status(404).json({
+          success: false,
+          message: `The User with id => ${id} not found`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `The User ${id} `,
+        User: User.rows[0],
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+};
+
 
 module.exports = {
   register,
   login,
-  getProfile
+  getProfile,
+  getProfileTeam
 };

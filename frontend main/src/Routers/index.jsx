@@ -12,6 +12,7 @@ import Order from "../pages/Order/Order.jsx";
 import PartDash from "../pages/PartDash/PartDash.jsx"
 import Profile from "../pages/Profile/profile.jsx";
 import JoinOurTeam from "../pages/JoinOurTeam/JoinOurTeam.jsx";
+import NotFoundPage from "../pages/NotFoundPage/NotFound.jsx";
 export const router = createBrowserRouter([
 {
     path: "/",
@@ -56,6 +57,10 @@ export const router = createBrowserRouter([
         {
             path: "job",
             element: <JoinOurTeam/>,
+        },
+        {
+            path: "*",
+            element: <NotFoundPage/>,
         },
     ]
 }
