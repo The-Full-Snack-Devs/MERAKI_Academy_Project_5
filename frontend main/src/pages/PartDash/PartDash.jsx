@@ -10,6 +10,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import axios from "axios";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, IconButton, Container } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -51,6 +53,17 @@ const PartDash = () => {
     }
   };
 
+  const uploadHandler = (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "123abc");
+    axios.post("https://api.cloudinary.com/v1_1/duxfa6nqg/upload", data)
+      .then((res) =>{ 
+        console.log(res.data.url);
+        setPartData({ ...partData, imagep: res.data.url })})
+      .catch((err) => console.log(err.response?.data));
+  };
+
   useEffect(() => {
     getAllParts();
   }, []);
@@ -73,7 +86,7 @@ const PartDash = () => {
   };
 
   return (
-    <Container fullWidth sx={{ mt: 10 }}>
+    <Container  sx={{ mt: 10 }}>
 
       <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
         Add New Part
@@ -133,11 +146,11 @@ const PartDash = () => {
           <TextField fullWidth margin="dense" label="Name" value={partData.namep} onChange={(e) => setPartData({ ...partData, namep: e.target.value })} />
           <TextField fullWidth margin="dense" label="Price" type="number" value={partData.price} onChange={(e) => setPartData({ ...partData, price: e.target.value })} />
           <TextField fullWidth margin="dense" label="Service ID" value={partData.serviceId} onChange={(e) => setPartData({ ...partData, serviceId: e.target.value })} />
-          <TextField fullWidth margin="dense" label="Image URL" value={partData.imagep} onChange={(e) => setPartData({ ...partData, imagep: e.target.value })} />
+          <Button fullWidth component="label" variant="outlined" startIcon={<CloudUploadIcon />}>Upload Image<input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} /></Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)}>Cancel</Button>
-          <Button variant="contained" color="primary" onClick={handleSave}>
+          <Button variant="contained" color="primary" onClick={()=>{handleSave()}}>
             Save
           </Button>
         </DialogActions>
