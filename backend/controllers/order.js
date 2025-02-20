@@ -48,7 +48,9 @@ const createNewOrder = (req, res) => {
 const getAllOrders = (req, res) => {
   const query = `SELECT * FROM orders
 INNER JOIN users ON users.id = orders.user_id
-WHERE orders.is_deleted=0`;
+WHERE orders.is_deleted=0
+ORDER BY orders.status DESC`
+;
   pool.query(query)
     .then((result) => {
       res.status(200).json({

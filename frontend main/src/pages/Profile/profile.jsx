@@ -17,6 +17,7 @@ import Paper from '@mui/material/Paper';
 import {  TextField } from "@mui/material";
 import { ThemeContext } from "../../components/MUI/MUITheme";
 import CloseIcon from "@mui/icons-material/Close";
+import zIndex from "@mui/material/styles/zIndex";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -317,7 +318,7 @@ const [done, setDone] = useState(false)
               <TableRow>
                 <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
                   <Typography variant="body1" color="text.secondary">
-                   NOT ORDER YET !
+                   NO ORDER YET !
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -330,8 +331,8 @@ const [done, setDone] = useState(false)
   <Dialog 
     fullWidth 
     maxWidth="sm"
-    open={CartToggle} // Ensure it's controlled by state
-    onClose={() => setCartToggle(false)} // Close on outside click
+    open={CartToggle} 
+    onClose={() => setCartToggle(false)} 
   >
     {/* Modal Header */}
     <DialogTitle 
@@ -355,15 +356,15 @@ const [done, setDone] = useState(false)
 {/* cart on show  */}
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
       {cart?.map((ele, ind) => (
-        <Card key={ind} sx={{ maxWidth: 400, width: "100%", boxShadow: 3, borderRadius: 2 ,display: "flex"}}>
-          <CardMedia component="img" height="100" image={ele.image} sx={{height:"100%"}} />
+        <Card key={ind} sx={{ maxWidth: 400, width: "100%", boxShadow: 3, borderRadius: 2 ,display: "flex", alignItems: "center"}}>
+          <CardMedia component="img" height="100" image={ele.imagep} sx={{height: "100%", width:"40%", objectFit: "cover"}} />
         
-          <CardContent>
+          <CardContent >
             <Typography variant="h6" component="div">
-              {ele.name}
+              {ele.namep}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {ele.description}
+              {ele.name}
             </Typography>
             <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
               ${ele.price}
