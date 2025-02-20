@@ -14,19 +14,16 @@ export const apiClient = {
   part: {
     getPartByServiceId: async (id, token) => {
       return await axios.get(`/part/service/${id}`, appendHeadrs(token));
-    },getAllParts: async (token) => {
-      return await axios.get(`/part` , appendHeadrs(token));
     },
-
     getAllParts: async () => {
-      return await axios.get(`/part/`);
+      return await axios.get(`/part`);
     },
     updatePartById: async (id, updatedPart) =>{
       return await axios.put(`/part/${id}`, updatedPart);
 
     },
-    createNewPart: async (token) => {
-      return await axios.get(`/part`, appendHeadrs(token));
+    createNewPart: async (x, token) => {
+      return await axios.post(`/part`,x, appendHeadrs(token));
     },
 
     deletePartById: async (id) => {

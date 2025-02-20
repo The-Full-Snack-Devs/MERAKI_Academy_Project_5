@@ -1,9 +1,11 @@
 const {pool }= require("../models/db");
 
 const createNewPart = (req, res) => {
-  const { namep, price, service_id, imagep } = req.body;
+  console.log(req.body);
+  
+  const { namep, price, serviceId, imagep } = req.body;
   const query = `INSERT INTO parts (namep, price, service_id, imagep) VALUES ($1, $2, $3, $4) RETURNING *;`;
-  const data = [namep, price, service_id, imagep];
+  const data = [namep, price, serviceId, imagep];
   pool
     .query(query, data)
     .then((result) => {

@@ -33,7 +33,10 @@ const Navbar = () => {
         {isLoggedIn ? (
           <>
         {role === "admin" && (
+          <>
+          <Button  fontWeight="bold" variant="outlined" color="primary" onClick={()=>navigate("/part")}><strong>Parts</strong> </Button>
           <Button  fontWeight="bold" variant="outlined" color="primary" onClick={()=>navigate("/orders")}><strong>Orders</strong> </Button>
+          </>
         )}
           <Button  fontWeight="bold" variant="outlined" color="primary" onClick={() => navigate("/HIW")}><strong>How It Works</strong> </Button>
           <Button  variant="outlined" color="primary" onClick={() => navigate("/Services")}><strong>Our Services</strong> </Button>
