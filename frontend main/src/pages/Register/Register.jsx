@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/api";
 import { apiClient } from "../../Service/api/api";
-import { Container, Paper, Typography, TextField, Button, Box, Modal } from "@mui/material"; // تمت إضافة Modal
+import { Container, Paper, Divider, Card, Stack, Typography, TextField, Button, Box, Modal } from "@mui/material"; // تمت إضافة Modal
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SaveIcon from "@mui/icons-material/Save";
@@ -96,9 +96,46 @@ function Register() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ padding: 3, mt:2  }}>
-      <Paper elevation={3} sx={{ padding: 3, mt: 5,boxShadow:5 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Stack
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          minHeight: "100vh",
+          backgroundImage: "url('src/assets/A_modern_car_repair_garage_with_an_orange_color_th.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay
+            backdropFilter: "blur(5px)",
+            zIndex: 1,
+          },
+        }}
+      >
+<Card
+          sx={{
+            p: 4,
+            width: "100%",
+            maxWidth: 500,
+            boxShadow: 5,
+            zIndex: 2,
+            textAlign: "center",
+            marginTop:4,
+            height:"90%"
+          }}
+        >   
+                  <img src="src/assets/Mech2U_logo_transparent-removebg-preview.png" alt="Mech2U" style={{ height: 100, mb: 10}} onClick={() => navigate("/")}/>
+ 
+        
+            <Typography variant="h4"  fontWeight="bold" component="h1" gutterBottom>
             Welcome to Mech2U
           </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1  }}>
@@ -110,10 +147,15 @@ function Register() {
           <TextField  size="small" label="Email" type="email" fullWidth onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
           <TextField  size="small" label="Password" type="password" fullWidth onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
           
-          
-          <Button variant="outlined" color="primary" onClick={() => setOpenMapModal(true)}>
+          <Box fullWidth sx={{display: "flex" ,justifyContent:"center" , gap: 1 }}>
+          <Button sx={{width:"50%"}} variant="outlined" color="primary" onClick={() => setOpenMapModal(true)}>
             Set Location
           </Button>
+          <Button sx={{width:"50%"}} component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
+            Upload Image
+            <input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} />
+          </Button>
+          </Box>
 
           <Modal open={openMapModal} onClose={() => setOpenMapModal(false)}>
       <Box
@@ -188,12 +230,10 @@ function Register() {
         </Box>
       </Box>
     </Modal>
-          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
-            Upload Image
-            <input type="file" hidden onChange={(e) => uploadHandler(e.target.files[0])} />
-          </Button>
+        
 
           <Button variant="outlined" fullWidth onClick={CreateUser}>Create Account</Button>
+          <Divider sx={{ my: 2 }}>OR</Divider>
           < GoogleLogin  onSuccess={(response)=>{
             console.log(jwtDecode(response.credential));
             const data=jwtDecode(response.credential)
@@ -213,9 +253,9 @@ function Register() {
             }} onError={()=>console.log("failed")}/>
         </Box>
         {Show && <Typography align="center" color="primary" sx={{ mt: 2 }}>{Res}</Typography>}
-        
-      </Paper>
-    </Container>
+
+      </Card>
+      </Stack>
   );
 }
 

@@ -81,6 +81,7 @@ const HowItWork = () => {
             width: "100%",
             height: "100%",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
+            
           },
         }}
       >
@@ -93,7 +94,7 @@ const HowItWork = () => {
           </Typography>
         </Box>
       </Box>
-    <Grid container spacing={4} sx={{ mt: 5, px: 3 }}>
+    <Grid container spacing={4} sx={{ mt: 5, px: 3 , minHeight:"100vh" }}>
       {steps.map((step, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card sx={{ textAlign: "center", p: 3, boxShadow: 3 }}>

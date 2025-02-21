@@ -26,7 +26,7 @@ const JoinOurTeam = () => {
   
   return (
     <div>
-        <Card sx={{ maxWidth: 600, margin: '20px auto',mt:10, boxShadow:5 }}>
+        <Card sx={{ maxWidth: 600, margin: '20px auto',mt:10, boxShadow:5  }}>
       <CardHeader title="Job Description" subheader="Mechanical Technician" />
       <Divider />
       <CardContent>
@@ -48,7 +48,7 @@ const JoinOurTeam = () => {
           <Typography variant="body1">- Replacing worn-out or damaged parts</Typography>
           <Typography variant="body1">- Collaborating with other technical teams</Typography>
         </Box>
-        <Button fullWidth variant="outlined" color="primary" onClick={handleClickOpen}>
+        <Button sx={{mt:2}} fullWidth variant="outlined" color="primary" onClick={handleClickOpen}>
         Apply Now
       </Button>
       </CardContent>

@@ -51,7 +51,7 @@ const Cart = () => {
   }, [cart]);
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3 , minHeight:"100vh" }}>
       <Typography variant="h4" fontWeight="bold" textAlign="center" mb={3}>
         Your Cart
       </Typography>

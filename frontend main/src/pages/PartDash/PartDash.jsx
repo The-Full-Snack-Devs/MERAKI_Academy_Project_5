@@ -86,7 +86,7 @@ const PartDash = () => {
   };
 
   return (
-    <Container  sx={{ mt: 10 }}>
+    <Container  sx={{ mt: 10,mb:2 , minHeight:"100vh" }}>
 
       <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
         Add New Part
