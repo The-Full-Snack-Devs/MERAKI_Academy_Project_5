@@ -12,7 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, IconButton, Container } from "@mui/material";
+import { Button, Dialog, DialogTitle, DialogContent,Box, DialogActions, TextField, IconButton, Container } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -115,7 +115,7 @@ const PartDash = () => {
                   <img src={part.imagep} alt={part.namep} width={50} height={50} />
                 </StyledTableCell>
                 {role === "admin" && (
-                  <StyledTableCell>
+                  <StyledTableCell sx={{display:"flex", gap:2}}>
                     <Button variant="outlined" onClick={() => { setEditingPart(part.idp); setPartData(part); setOpenModal(true); }}>
                       Edit
                     </Button>

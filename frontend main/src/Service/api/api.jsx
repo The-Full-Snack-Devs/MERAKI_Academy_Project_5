@@ -86,16 +86,15 @@ export const apiClient = {
   getOrderById:async (token)=>{
     return await axios.get(`/orders/all`,appendHeadrs(token))
   },
-},
-
-getProfileTeam:async(token)=>{
-  return await axios.get(`/users/team`,appendHeadrs(token))
-
-},
-getOrderByTeam:async(id,token)=>{
-  return await axios.get(`/orders/team/${id}`,appendHeadrs(token))
-
+  getProfileTeam:async(token)=>{
+    return await axios.get(`/users/team`,appendHeadrs(token))
+  
+  },
+  getOrderByTeam:async(id,token)=>{
+    return await axios.get(`/orders/team/${id}`,appendHeadrs(token))
+  
+  },
 },
 
 }
-}
+

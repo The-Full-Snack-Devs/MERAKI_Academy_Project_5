@@ -34,6 +34,8 @@ function TL() {
   };
 
   const createOrder = async () => {
+    console.log(newUser);
+    
     try {
       console.log(newUser);
       const result = await apiClient.orders.createOrder(newUser, token);
