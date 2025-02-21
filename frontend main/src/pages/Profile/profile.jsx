@@ -17,7 +17,6 @@ import Paper from '@mui/material/Paper';
 import {  TextField } from "@mui/material";
 import { ThemeContext } from "../../components/MUI/MUITheme";
 import CloseIcon from "@mui/icons-material/Close";
-import zIndex from "@mui/material/styles/zIndex";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -104,7 +103,10 @@ const [done, setDone] = useState(false)
 
 
   useEffect(() => {
-    getOrdersTeam(teamId)
+    if(role==="emp"){
+      getOrdersTeam(teamId)
+    }
+   
   }, [teamId,done]);
 
   useEffect(() => {
@@ -206,7 +208,7 @@ const [done, setDone] = useState(false)
               <StyledTableCell align="right">{row.email}</StyledTableCell>
               <StyledTableCell align="right">{row.phone}</StyledTableCell>
               <StyledTableCell align="right"><Link href= {`https://maps.google.com/?q=${row.location.lat},${row.location.lng}`} underline="hover"> {'Open Location'}</Link></StyledTableCell>
-              <StyledTableCell align="right"><TextField  disabled={true} type="datetime-local" defaultValue={row.date_time} /></StyledTableCell>
+              <StyledTableCell align="right"><TextField  disabled={true} type="datetime-local" defaultValue={row.date_time} sx={{width:"213px"}} /></StyledTableCell>
               <StyledTableCell align="right" onClick={()=>{
                 setid(row.cart_id)
                 setCartToggle(true)
@@ -249,18 +251,17 @@ const [done, setDone] = useState(false)
 
     {/* body */}
 
-    <div>
+    {/* <div>
         {cart?.map((ele,ind)=>{
             return <div>
-                 <img src={ele.image} />
+                 <img src={ele.imagep} />
           <p>{ele.name}</p>
           <p>{ele.description}</p>
           <p>{ele.price}</p>
             </div>
         })}
-        {/* <p>total price: {tPrice}</p> */}
         <button onClick={()=>{setCartToggle(true)}}>Place order..</button>
-    </div>
+    </div> */}
 
     {/* Modal Footer */}
     <DialogActions sx={{ backgroundColor: darkMode ? "#414141" : "#ffffff" }}>
@@ -291,7 +292,7 @@ const [done, setDone] = useState(false)
           <TableHead>
             <TableRow >
               <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }}>services</StyledTableCell>
-              <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">date+time</StyledTableCell>
+              <StyledTableCell  sx={{ color: "white", fontWeight: "bold"  }} align="right" >date+time</StyledTableCell>
               <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">location</StyledTableCell>
               <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Status</StyledTableCell>
             </TableRow>
@@ -318,7 +319,7 @@ const [done, setDone] = useState(false)
               <TableRow>
                 <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
                   <Typography variant="body1" color="text.secondary">
-                   NO ORDER YET !
+                   NOT ORDER YET !
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -331,8 +332,8 @@ const [done, setDone] = useState(false)
   <Dialog 
     fullWidth 
     maxWidth="sm"
-    open={CartToggle} 
-    onClose={() => setCartToggle(false)} 
+    open={CartToggle} // Ensure it's controlled by state
+    onClose={() => setCartToggle(false)} // Close on outside click
   >
     {/* Modal Header */}
     <DialogTitle 
@@ -354,7 +355,7 @@ const [done, setDone] = useState(false)
 
     {/* body */}
 {/* cart on show  */}
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
       {cart?.map((ele, ind) => (
         <Card key={ind} sx={{ maxWidth: 400, width: "100%", boxShadow: 3, borderRadius: 2 ,display: "flex", alignItems: "center"}}>
           <CardMedia component="img" height="100" image={ele.imagep} sx={{height: "100%", width:"40%", objectFit: "cover"}} />
