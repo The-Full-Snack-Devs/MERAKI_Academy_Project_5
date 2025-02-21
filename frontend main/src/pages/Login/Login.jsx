@@ -3,12 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin, setUserId, setRole } from "../../Service/redux/reducers/auth";
 import { apiClient } from "../../Service/api/api";
-import { Google as GoogleIcon } from '@mui/icons-material'
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios"
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-
+import axios from "axios";
 import {
   Card,
   Box,
@@ -18,6 +15,7 @@ import {
   Link,
   Stack,
   CssBaseline,
+  Divider,
 } from "@mui/material";
 
 const Login = () => {
@@ -34,7 +32,6 @@ const Login = () => {
       dispatch(setLogin(result.data.token));
       dispatch(setUserId(result.data.userId));
       dispatch(setRole(result.data.role));
-      console.log("role", result.data.role);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -51,17 +48,41 @@ const Login = () => {
         alignItems="center"
         sx={{
           minHeight: "100vh",
-          backgroundColor: "background.default",
-          p: 2,
+          backgroundImage: "url('src/assets/A_modern_car_repair_garage_with_an_orange_color_th.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay
+            backdropFilter: "blur(5px)",
+            zIndex: 1,
+          },
         }}
       >
-        <Card  sx={{ p: 4, width: "100%", maxWidth: 500 ,boxShadow:5}}>
-          <Typography variant="h4" component="h1" gutterBottom>
+        <Card
+          sx={{
+            p: 4,
+            width: "100%",
+            maxWidth: 500,
+            boxShadow: 5,
+            zIndex: 2,
+            textAlign: "center",
+          }}
+        >  
+          <img src="src/assets/Mech2U_logo_transparent-removebg-preview.png" alt="Mech2U" style={{ height: 100, mb: 10}} onClick={() => navigate("/")}/>
+
+          <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom sx={{my:3}}>
             Welcome to Mech2U
           </Typography>
           <Box
             component="form"
-            // onSubmit={handleLogin}
             noValidate
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
@@ -87,40 +108,61 @@ const Login = () => {
                 setNewlogin({ ...newlogin, password: e.target.value })
               }
             />
-            <Button onClick={handleLogin} type="submit" variant="outlined" fullWidth>
+            <Button
+              onClick={handleLogin}
+              type="submit"
+              variant="contained"
+              fullWidth
+            >
               Log in
             </Button>
-            < GoogleLogin  shape= "rectangular"  onSuccess={(response)=>{
-            console.log(jwtDecode(response.credential));
-            const data=jwtDecode(response.credential)
-            axios.post("http://localhost:5000/google/",data)
-            .then((result)=>{
-              console.log(result);
-              setRes(result.data.message);
-              dispatch(setLogin(result.data.token));
-              dispatch(setUserId(result.data.userId));
-              dispatch(setRole(result.data.role));
-              // console.log("role", result.data.role);
-              navigate("/");
-              
-            })
-            .catch((err)=>{console.log(err);
-            })
-            }} onError={()=>console.log("failed")}/>
           </Box>
+
+          {/* OR Divider */}
+          <Divider sx={{ my: 2 }}>OR</Divider>
+
+          <GoogleLogin
+            shape="rectangular"
+            onSuccess={(response) => {
+              const data = jwtDecode(response.credential);
+              axios
+                .post("http://localhost:5000/google/", data)
+                .then((result) => {
+                  setRes(result.data.message);
+                  dispatch(setLogin(result.data.token));
+                  dispatch(setUserId(result.data.userId));
+                  dispatch(setRole(result.data.role));
+                  navigate("/");
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+            onError={() => console.log("Google login failed")}
+          />
+
           {res && (
             <Typography color="error" sx={{ mt: 2 }}>
               {res}
             </Typography>
           )}
+
+          {/* Register Link with Hover Effect */}
           <Typography sx={{ mt: 2 }}>
             Don't have an account?{" "}
             <Link
               component="button"
-              variant="body2"
+              variant="body1"
+              sx={{
+                cursor: "pointer",
+                textDecoration: "none",
+                fontWeight: "bold",
+                color: "primary.main",
+                "&:hover": { textDecoration: "underline" },
+              }}
               onClick={() => navigate("/Register")}
             >
-              Register Now 
+              Register Now
             </Link>
           </Typography>
         </Card>

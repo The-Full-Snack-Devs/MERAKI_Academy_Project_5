@@ -121,11 +121,11 @@ const DetailsServices = () => {
                   onClick={() =>{ 
                     addPartToCart(part.idp)
                     setOpen(true);
-                    setTimeout(() => setOpen(false), 1000); // إخفاء التنبيه بعد 3 ثوانٍ
+                    setTimeout(() => setOpen(false), 1000);
                   }}
                 >
                   
-                  Add to Cart
+                  Add to Cart!!
                 </Button>
                
               </CardContent>
@@ -145,7 +145,7 @@ const DetailsServices = () => {
           severity="success" 
           style={{ marginTop: "20px" }}
         >
-          <AlertTitle  >add Successfully</AlertTitle>
+          <AlertTitle  >Added Successfully</AlertTitle>
         
         </Alert>
         </div>

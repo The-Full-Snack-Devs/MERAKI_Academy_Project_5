@@ -190,7 +190,7 @@ const [done, setDone] = useState(false)
             <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Email</StyledTableCell>
             <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Phone</StyledTableCell>
             <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Location</StyledTableCell>
-            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">date+time</StyledTableCell>
+            <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Time</StyledTableCell>
             <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Cart</StyledTableCell>
             <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Status</StyledTableCell>
             <StyledTableCell  sx={{ color: "white", fontWeight: "bold" }} align="right">Confirmation</StyledTableCell>
@@ -210,7 +210,7 @@ const [done, setDone] = useState(false)
               <StyledTableCell align="right" onClick={()=>{
                 setid(row.cart_id)
                 setCartToggle(true)
-              }}><Button>show</Button></StyledTableCell>
+              }}><Button>SHOW</Button></StyledTableCell>
               <StyledTableCell align="right">{row.status}</StyledTableCell>
          
               <StyledTableCell align="right"> <Button  variant="outlined" color="primary" onClick={() => {
