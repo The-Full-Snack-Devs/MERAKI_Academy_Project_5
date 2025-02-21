@@ -183,6 +183,27 @@ const Services = () => {
         </Box>
       </Modal>
     </Container>
+    <Box sx={{ bgcolor: "#f04f23", color: "white", py: 6, textAlign: "center", mt: 5 }}>
+        <Container>
+          <Typography variant="h4" fontWeight="bold">🚨 Urgent Assistance</Typography>
+          <Typography variant="body1" sx={{ mt: 2, maxWidth: "700px", mx: "auto" }}>
+            Need immediate roadside assistance? Contact us now for fast and reliable help!
+          </Typography>
+
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3, flexWrap: "wrap" }}>
+            <Button variant="contained" color="primary" href="tel:+9627XXXXXXXX" sx={{ fontSize: "1rem" }}>
+              📞 Call Now
+            </Button>
+            <Button variant="contained" color="secondary" href="mailto:support@mech2u.com" sx={{ fontSize: "1rem" }}>
+              📧 Email Us
+            </Button>
+            <Button variant="outlined" color="inherit" onClick={() => navigate("/contact")}
+              sx={{ fontSize: "1rem", borderColor: "white", color: "white", '&:hover': { bgcolor: "white", color: "black" } }}>
+              📍 Contact Us Page
+            </Button>
+          </Box>
+        </Container>
+      </Box>
     </>
   );
 };

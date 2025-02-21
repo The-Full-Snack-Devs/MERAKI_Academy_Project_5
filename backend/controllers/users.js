@@ -6,7 +6,9 @@ const saltRounds = parseInt(process.env.SALT);
 const register = async (req, res) => {
   console.log(req.body);
   
-  const { firstName, lastName, email, password,image,phone, lat, lng} = req.body;
+  const { firstName, lastName, email, password,image,phone, position} = req.body;
+  const lat = position.lat
+  const lng = position.lng
   const encryptedPassword = await bcrypt.hash(password, saltRounds);
   const query = `INSERT INTO users (firstName, lastName, email, password, role, image,phone,lat,lng) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`;
   const data = [
