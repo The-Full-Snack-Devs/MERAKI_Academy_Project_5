@@ -160,9 +160,11 @@ function Order() {
     <MenuItem value={2}>Team 2</MenuItem>
     <MenuItem value={3}>Team 3</MenuItem>
   </Select></StyledTableCell>
-              <StyledTableCell align="right"> <Button  variant="outlined" color="primary" onClick={() => {
+              <StyledTableCell align="right">{row.status == "Done" ? (<Button  disabled variant="outlined" color="primary" onClick={() => {
                 confirmOrder(row.ido)
-              }}> Confirm </Button>
+              }}> Done </Button>) : (<Button  variant="outlined" color="primary" onClick={() => {
+                confirmOrder(row.ido)
+              }}> Confirm </Button>)}
               </StyledTableCell>
             </StyledTableRow>
           ))}

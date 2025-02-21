@@ -21,6 +21,7 @@ const Footer = () => {
       
       }}
     >
+      
       {/* Social Media Icons */}
       <Box sx={{ display: "flex", gap: "15px", mb: 2 }}>
         <IconButton component="a" href="https://facebook.com" target="_blank" color="inherit">
@@ -39,8 +40,8 @@ const Footer = () => {
 
       {/* Footer Links */}
       <Box sx={{ display: "flex", gap: "20px", mb: 2 }}>
-        <Link to="/about" style={{ textDecoration: "none", color: "inherit" }}>About</Link>
-        <Link to="/privacy" style={{ textDecoration: "none", color: "inherit" }}>Privacy Policy</Link>
+        <Link to="/aboutus" style={{ textDecoration: "none", color: "inherit" }}>About</Link>
+        <Link to="/pp" style={{ textDecoration: "none", color: "inherit" }}>Privacy Policy</Link>
         <Link to="/contact" style={{ textDecoration: "none", color: "inherit" }}>Contact</Link>
       </Box>
 

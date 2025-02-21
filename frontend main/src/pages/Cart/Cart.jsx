@@ -5,7 +5,7 @@ import { apiClient } from "../../Service/api/api";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
-  Paper, Typography, Button, Box, IconButton
+  Paper, Typography, Button, Box, IconButton,Alert,AlertTitle
 } from "@mui/material";
 
 
@@ -14,6 +14,7 @@ const Cart = () => {
   const [cart, setCart] = useState([]);
   const token = useSelector((state) => state.authReducer.token);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [open, setOpen] = useState(false);
 
   const getCartById = async () => {
     try {
@@ -27,7 +28,6 @@ const Cart = () => {
   const removeFromCart = async (id) => {
     try {
       const result = await apiClient.cart.removeFromCart(id, token);
-      alert("Item Removed Successfully!!");
       navigate(0)
       }
       catch (error) {
@@ -86,7 +86,11 @@ const Cart = () => {
                   <Typography variant="h6" color="primary">${item.price}</Typography>
                 </TableCell>
                 <TableCell>
-                <IconButton color="primary" aria-label="delete" onClick={()=>{removeFromCart(item.idpc)}}>                 <HighlightOffIcon />
+                <IconButton color="primary" aria-label="delete" onClick={()=>{
+                  setOpen(true);
+                  setTimeout(() => setOpen(false), 1000);
+                  removeFromCart(item.idpc)}}>
+                  <HighlightOffIcon />
                 </IconButton>
                 </TableCell>
               </TableRow>
@@ -118,8 +122,28 @@ const Cart = () => {
           </Button>
         </Box>
       )}
+      {open && (
+           <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1000, // لضمان الظهور فوق العناصر الأخرى
+            minWidth: "300px",
+          }}>
+        <Alert 
+          severity="success" 
+          style={{ marginTop: "20px" }}
+        >
+          <AlertTitle  >Removed From The Cart Successfully</AlertTitle>
+        
+        </Alert>
+        </div>
+          )}
     </Box>
+    
   );
+  
 };
 
 export default Cart;

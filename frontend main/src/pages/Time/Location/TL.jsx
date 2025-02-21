@@ -112,17 +112,17 @@ function TL() {
       boxShadow: 2,
       input: {
         padding: "10px",
-        color: "black", // ✅ Fixes white text issue in dark mode
+        color: "black", 
       },
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
-          borderColor: "rgba(0, 0, 0, 0.2)", // Light gray border
+          borderColor: "rgba(0, 0, 0, 0.2)",
         },
         "&:hover fieldset": {
-          borderColor: "#f04f23", // Primary brand color on hover
+          borderColor: "#f04f23",
         },
         "&.Mui-focused fieldset": {
-          borderColor: "#f04f23", // Primary brand color on focus
+          borderColor: "#f04f23", 
           borderWidth: "2px",
         },
       },
