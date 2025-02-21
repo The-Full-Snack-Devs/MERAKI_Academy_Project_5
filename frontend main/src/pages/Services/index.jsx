@@ -89,7 +89,7 @@ const Services = () => {
 
   return (
     <>
-    <Box
+    <Box 
         sx={{
         mt: "60px",
           position: "relative",
@@ -111,6 +111,7 @@ const Services = () => {
             width: "100%",
             height: "100%",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
+            
           },
         }}
       >

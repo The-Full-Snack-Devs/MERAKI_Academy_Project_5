@@ -1,8 +1,11 @@
 import React, { useRef } from "react";
 import { Box, Typography, TextField, Button, Container } from "@mui/material";
 import emailjs from "@emailjs/browser";
+import { useNavigate } from "react-router-dom";
 
 const ContactUs = () => {
+  const navigate = useNavigate();
+
   const form = useRef();
 
   const sendEmail = (e) => {
@@ -50,6 +53,7 @@ const ContactUs = () => {
             width: "100%",
             height: "100%",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
+             minHeight:"100vh"
           },
         }}
       >
@@ -100,6 +104,10 @@ const ContactUs = () => {
             variant="contained"
             color="primary"
             sx={{ mt: 2, px: 4, py: 1.5, fontSize: "1.2rem" }}
+           onClick={()=>{
+            alert(` Message sent successfully`)
+            navigate("/")
+           }}
           >
             Send Message
           </Button>

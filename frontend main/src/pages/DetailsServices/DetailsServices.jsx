@@ -99,7 +99,7 @@ const DetailsServices = () => {
       )}
 
       {/* Parts Section */}
-      <Typography variant="h4" fontWeight="bold" sx={{ mb: 3 }}>
+      <Typography variant="h4" fontWeight="bold" sx={{ mb: 3, minHeight:"100vh" }}>
         Available Parts
       </Typography>
 

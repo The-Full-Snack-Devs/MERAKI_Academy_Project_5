@@ -30,6 +30,7 @@ const AboutUs = () => {
             width: "100%",
             height: "100%",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
+             minHeight:"100vh"
           },
         }}
       >

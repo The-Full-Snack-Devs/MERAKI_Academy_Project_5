@@ -18,6 +18,8 @@ const Footer = () => {
         alignItems: "center",
         textAlign: "center",
         borderTop: `2px solid ${theme.palette.primary.main}`,
+        marginTop: "auto",
+      
       
       }}
     >

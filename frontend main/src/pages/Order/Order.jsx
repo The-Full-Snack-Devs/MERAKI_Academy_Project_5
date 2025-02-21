@@ -114,7 +114,7 @@ function Order() {
 
     return (
       <>
-      <TableContainer component={Paper} >
+      <TableContainer sx={{ minHeight:"100vh"}} component={Paper} >
       <Table sx={{ minWidth: 700, mt: "70px"}} aria-label="customized table">
         <TableHead>
           <TableRow>
