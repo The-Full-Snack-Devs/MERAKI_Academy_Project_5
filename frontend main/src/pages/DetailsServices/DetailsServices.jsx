@@ -99,11 +99,11 @@ const DetailsServices = () => {
       )}
 
       {/* Parts Section */}
-      <Typography variant="h4" fontWeight="bold" sx={{ mb: 3, minHeight:"100vh" }}>
+      <Typography variant="h4" fontWeight="bold" sx={{ mb: 3 }}>
         Available Parts
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ minHeight:"100vh"}}>
         {detailsServices.map((part, index) => (
           <Grid item xs={12} sm={6} md={4} key={index} mb={5}>
             <Card sx={{ boxShadow: 5, transition: "0.3s", "&:hover": { transform: "scale(1.05)" } }}>

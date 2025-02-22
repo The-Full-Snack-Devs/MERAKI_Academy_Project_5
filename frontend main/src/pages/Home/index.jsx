@@ -105,13 +105,13 @@ const Home = () => {
         <Grid container spacing={4} sx={{ mt: 5 }}>
           {services?.map((service, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card sx={{ textAlign: "center", p: 3, boxShadow: 3 }}>
+              <Card sx={{ textAlign: "center", p: 3, boxShadow: 3  }}>
               <CardMedia component="img" height="200" image={service.image} alt={service.name} />
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold">
                     {service.name}
                   </Typography>
-                  <Typography variant="body2" sx={{ mt: 1, color: "gray" }}>
+                  <Typography  variant="body2" sx={{ mt: 1, color: "gray" }}>
                     {service.description}
                   </Typography>
                 </CardContent>
