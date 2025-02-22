@@ -12,7 +12,7 @@ const steps = [
   },
   { 
     number: 2, 
-    title: "Login or Register to Book a Service", 
+    title: "Login to Book a Service", 
     description: "Create an account or log in to book your desired service.", 
     link: "/login" ,
     button: "Login"
