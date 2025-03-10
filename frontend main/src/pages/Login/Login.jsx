@@ -126,7 +126,7 @@ const Login = () => {
             onSuccess={(response) => {
               const data = jwtDecode(response.credential);
               axios
-                .post("http://localhost:5000/google/", data)
+                .post("https://mech2u.onrender.com/google/", data)
                 .then((result) => {
                   setRes(result.data.message);
                   dispatch(setLogin(result.data.token));
