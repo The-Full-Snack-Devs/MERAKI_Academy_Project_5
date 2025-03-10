@@ -24,7 +24,7 @@ function TL() {
       };
 
     const getCartById=()=>{
-        axios.get(`http://localhost:5000/users`, { headers })
+        axios.get(`https://mech2u.onrender.com/users`, { headers })
         .then((result)=>{            
             setPosition({ lat: Number(result.data.User.lat), lng: Number(result.data.User.lng) })
         })
@@ -35,7 +35,7 @@ function TL() {
 
     const cretaeOrder = () => {
         axios
-          .post("http://localhost:5000/orders", newUser, {headers})
+          .post("https://mech2u.onrender.com/orders", newUser, {headers})
           .then((rese) => {
             
           })
