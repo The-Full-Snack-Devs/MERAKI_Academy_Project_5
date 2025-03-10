@@ -53,7 +53,7 @@ const DetailsServices = () => {
 
   const addPartToCart = (id) => {
     axios
-      .post(`http://localhost:5000/services/addCart/${id}`, { cart_id }, { headers })
+      .post(`https://mech2u.onrender.com/services/addCart/${id}`, { cart_id }, { headers })
       .then((result) => {
         console.log(result.data);
       })

@@ -237,7 +237,7 @@ function Register() {
           < GoogleLogin  onSuccess={(response)=>{
             console.log(jwtDecode(response.credential));
             const data=jwtDecode(response.credential)
-            axios.post("http://localhost:5000/google/",data)
+            axios.post("https://mech2u.onrender.com/google/",data)
             .then((result)=>{
               console.log(result);
               setRes(result.data.message);
