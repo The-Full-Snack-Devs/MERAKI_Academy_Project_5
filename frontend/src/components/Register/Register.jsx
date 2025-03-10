@@ -21,7 +21,7 @@ function Register() {
 
   const CreateUser = () => {
     axios
-      .post("https://mech2u.onrender.com/users/register", newUser)
+      .post("http://localhost:5000/users/register", newUser)
       .then((rese) => {
         setRes(rese.data.message);
         setShow(true);

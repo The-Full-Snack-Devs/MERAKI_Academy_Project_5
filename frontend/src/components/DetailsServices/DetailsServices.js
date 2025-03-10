@@ -19,7 +19,7 @@ const DetailsServices = () => {
     };
 
     const getServicesDetails=async ()=>{
-       /*  axios.get(`https://mech2u.onrender.com/part/service/${id}`, { headers })
+       /*  axios.get(`http://localhost:5000/part/service/${id}`, { headers })
         .then((result)=>{
           console.log(result.data.result);
           dispatch(setDetailsServices(result.data.result));
@@ -37,7 +37,7 @@ const DetailsServices = () => {
     }
 
     const addPartToCart=(id)=>{
-      axios.post(`https://mech2u.onrender.com/services/addCart/${id}`,{}, {headers})
+      axios.post(`http://localhost:5000/services/addCart/${id}`,{}, {headers})
       .then((result)=>{
         console.log(result.data);
       })

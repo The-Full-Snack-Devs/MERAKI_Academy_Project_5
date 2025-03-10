@@ -17,7 +17,7 @@ const Cart = () => {
     const dispatch = useDispatch();
 
     const getCartById=()=>{
-    axios.get("https://mech2u.onrender.com/services/getCart", { headers })
+    axios.get("http://localhost:5000/services/getCart", { headers })
     .then((result)=>{
         console.log(11);
         console.log("jjjjjjjjjjj:",cart);

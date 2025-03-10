@@ -11,7 +11,7 @@ const Services = () => {
   const dispatch = useDispatch();
   const getAllServices = () => {
     axios
-      .get("https://mech2u.onrender.com/services/all")
+      .get("http://localhost:5000/services/all")
       .then((result) => {
         console.log(result.data.servecies);
 

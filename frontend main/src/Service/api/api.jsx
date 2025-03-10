@@ -1,6 +1,6 @@
 import axios from "axios";
 import Services from "../../pages/Services";
-axios.defaults.baseURL = "https://mech2u.onrender.com"  ;
+axios.defaults.baseURL = "http://localhost:5000"  ;
 
 const appendHeadrs = (token)=>{
     return {
