@@ -39,7 +39,7 @@ const Home = () => {
         mt: "60px",
           position: "relative",
           width: "100%",
-          height: "90vh",
+          height: "100vh",
           backgroundImage: "url('src/assets/A_modern_car_repair_garage_with_an_orange_color_th.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
